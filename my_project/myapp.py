@@ -40,9 +40,9 @@ def post_data():
 
 def update_data():
     data = {
-        'id': 68,
-        'post_title': 'My Nice Post',
-        'post_description': 'I am proud to be an Asian',
+        'id': 65,
+        'post_title': 'My Nice article',
+        # 'post_description': 'I am proud to be an Indian',
         'post_user_id': 2
     }
 
@@ -58,7 +58,7 @@ def update_data():
     print(data)
 
 
-# update_data()
+update_data()
 
 def delete_data():
     data = {'id': 66}
@@ -75,4 +75,4 @@ def delete_data():
     print(data)
 
 
-delete_data()
+# delete_data()

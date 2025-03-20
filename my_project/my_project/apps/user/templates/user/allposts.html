@@ -43,7 +43,9 @@
         <br>
         {% endif %}
         <span id="ptitle">{{ post.post_title }}</span><br>
+        {% if post.post_content %}
         <img src="{{ post.post_content.url }}" style="width: 80%;" /><br>
+        {% endif %}
         Posted by: <span id="fbuser">{{ post.post_user }}</span><br>
         {% comment %} Description: <span id="dpost">{{ post.post_description }}</span><br> {% endcomment %}
         Description: <span id="dpost" class="mydesc">{{ post.post_description }}&nbsp;</span><span id="rbtn"><a href="{% url 'post:detpost' id=post.id %}">Read More</a></span><br>

@@ -6,6 +6,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 import io
 from django.views.decorators.csrf import csrf_exempt
+import pdb
 # def post_info(request, pk):
 #     post = PostModel.objects.get(id=pk)
 #     serializer = PostSerializer(post)
@@ -66,7 +67,9 @@ def post_api(request):
         # parse json data into python native data type
         pythondata = JSONParser().parse(stream)
         #convert native data into complex data or model instance
+        pdb.set_trace()
         serializer = PostSerializer(data=pythondata)
+        breakpoint()
         if serializer.is_valid():
             serializer.save()
             res = {'msg': 'Post Created'}
@@ -80,6 +83,7 @@ def post_api(request):
         json_data = request.body
         # store json_data in buffer
         stream = io.BytesIO(json_data)
+        breakpoint()
         # parse json data into python native data type
         pythondata = JSONParser().parse(stream)
         # Getting id of the post to be updated
@@ -87,7 +91,10 @@ def post_api(request):
         #Getting the post to be updated
         post = PostModel.objects.get(id=id)
         # Use serializer to update the data of post using api
+        breakpoint()
         serializer = PostSerializer(post, data=pythondata, partial=True)
+        pdb.set_trace()
+        print("breakpoint")
         if serializer.is_valid():
             serializer.save()
             res = {'msg': 'Post Updated'}

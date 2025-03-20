@@ -18,18 +18,18 @@ def get_data(id=None):
 
 
 def post_data():
-    # data = {
-    #     'username': 'Mohan',
-    #     'email': 'mohan@gmail.com',
-    #     'is_staff': False,
-    # }
+    data = {
+        'username': 'Sunil',
+        'email': 'abhay@gmail.com',
+        'is_staff': False,
+    }
     json_data = json.dumps(data)
     r = requests.post(url=URL, data=json_data)
     data = r.json()
     print(data)
 
 
-# post_data()
+post_data()
 
 
 def update_data():
@@ -63,4 +63,4 @@ def delete_data():
 
     print(data)
 
-delete_data()
+# delete_data()

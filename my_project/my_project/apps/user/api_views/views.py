@@ -6,11 +6,12 @@ from user.models import User
 import io
 from django.views.decorators.csrf import csrf_exempt
 from django.views import View
-from django.utils import decorators
+from django.utils.decorators import method_decorator
 import pdb
 
 
 # @decorators(name='patch')
+@method_decorator(csrf_exempt, name='dispatch')
 class UserAPI(View):
     def get(self, request, *args, **kwargs):
         json_data = request.body
