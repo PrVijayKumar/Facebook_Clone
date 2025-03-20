@@ -6,7 +6,7 @@ URL = "http://127.0.0.1:8000/postapi/postinfo/"
 post_info = {
     'post_title': 'Post about India',
     'post_description': 'Illegal Post',
-    'post_user_id': 2,
+    'post_user_id': 1,
 }
 
 json_data = json.dumps(post_info)

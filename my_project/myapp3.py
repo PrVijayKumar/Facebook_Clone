@@ -14,12 +14,12 @@ def get_data(id=None):
     data = r.json()
     print(data)
 
-# get_data(58)
+# get_data(7)
 
 
 def post_data():
     data = {
-        'username': 'Sunil',
+        'username': 'aditya',
         'email': 'abhay@gmail.com',
         'is_staff': False,
     }
@@ -34,7 +34,7 @@ post_data()
 
 def update_data():
     data = {
-        'id': 6,
+        'id': 13,
         'username': 'Mohan',
         'is_staff': True
     }
@@ -51,7 +51,7 @@ def update_data():
 # update_data()
 
 def delete_data():
-    data = {'id': 4}
+    data = {'id': 12}
     # convert data into json string
     json_data = json.dumps(data)
 

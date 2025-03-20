@@ -20,11 +20,12 @@ class UserAPI(View):
         id = pythondata.get('id', None)
         if id is not None:
             user = User.objects.get(id=id)
-            data = UserSerializer(user)
-            return JsonResponse(data)
+            serializer = UserSerializer(user)
+            return JsonResponse(serializer.data)
         users = User.objects.all()
-        data = UserSerializer(users)
-        return JsonResponse(data, safe=False)
+        serializer = UserSerializer(users, many=True)
+        pdb.set_trace()
+        return JsonResponse(serializer.data, safe=False)
     
     def post(self, request, *args, **kwargs):
         json_data = request.body
