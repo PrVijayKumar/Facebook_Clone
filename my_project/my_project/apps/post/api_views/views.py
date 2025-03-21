@@ -1,21 +1,65 @@
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+# from django.http import HttpResponse, JsonResponse
+# from django.shortcuts import render
 from post.models import PostModel
 from post.serializers import PostSerializer, CreatePostSerializer
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-import io
+# from rest_framework.renderers import JSONRenderer
+# from rest_framework.parsers import JSONParser
+# import io
 from django.views.decorators.csrf import csrf_exempt
 from user.models import User
 from user.serializers import UserSerializer
 import pdb
-
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 # from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.views import APIView
 
-class PostAPI(APIView):
+class PostList(ListModelMixin, GenericAPIView):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+class PostCreate(CreateModelMixin, GenericAPIView):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+class PostRetrieve(GenericAPIView, RetrieveModelMixin):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+class PostUpdate(GenericAPIView, UpdateModelMixin):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+class PostPatch(GenericAPIView, UpdateModelMixin):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def patch(self, request, *args, **kwargs):
+        pdb.set_trace()
+        return self.partial_update(request, *args, **kwargs)
+    
+class PostDestroy(GenericAPIView, DestroyModelMixin):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+"""class PostAPI(APIView):
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -56,7 +100,7 @@ class PostAPI(APIView):
         id = pk
         post = PostModel.objects.get(id=id)
         post.delete()
-        return Response({'msg': 'Post Deleted !!'})
+        return Response({'msg': 'Post Deleted !!'})"""
 
 
 """@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])

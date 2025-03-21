@@ -1,20 +1,24 @@
-from django.http import HttpResponse, JsonResponse
+# from django.http import HttpResponse, JsonResponse
 from user.serializers import UserSerializer, CreateUserSerializer
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
+# from rest_framework.renderers import JSONRenderer
+# from rest_framework.parsers import JSONParser
 from user.models import User
-import io
-from django.views.decorators.csrf import csrf_exempt
-from django.views import View
-from django.utils.decorators import method_decorator
+# import io
+# from django.views.decorators.csrf import csrf_exempt
+# from django.views import View
+# from django.utils.decorators import method_decorator
 import pdb
 
 # from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
+# from rest_framework.response import Response
+# from rest_framework import status
+# from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin
 
-class UserAPI(APIView):
+
+
+"""class UserAPI(APIView):
     def get(self, request, pk=None, format=None):
         id = pk
         if id is not None:
@@ -54,7 +58,7 @@ class UserAPI(APIView):
         id = pk
         user = User.objects.get(id=id)
         user.delete()
-        return Response({'msg': 'User Deleted !!'})
+        return Response({'msg': 'User Deleted !!'})"""
 
 
 
