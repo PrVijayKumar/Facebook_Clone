@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['username', 'email', 'is_staff']
+        fields = ['id', 'username', 'email', 'is_staff']
 
     def validate_is_staff(self, value):
         if value:

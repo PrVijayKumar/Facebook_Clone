@@ -18,7 +18,7 @@ class PostSerializer(serializers.ModelSerializer):
     post_user_id = serializers.IntegerField()
     class Meta:
         model = PostModel
-        fields = ['post_title', 'post_description', 'post_date', 'post_user_id']
+        fields = ['id', 'post_title', 'post_description', 'post_date', 'post_user_id']
 
     def validate_post_user_id(self, value):
         if value > 3:

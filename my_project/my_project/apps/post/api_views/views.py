@@ -10,13 +10,56 @@ from user.models import User
 from user.serializers import UserSerializer
 import pdb
 
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+# from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
+
+class PostAPI(APIView):
+    def get(self, request, pk=None, format=None):
+        id = pk
+        if id is not None:
+            post = PostModel.objects.get(id=id)
+            serializer = PostSerializer(post)
+            return Response(serializer.data)
+        posts = PostModel.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request, format=None):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Created'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request, pk, format=None):
+        id = pk
+        post = PostModel.objects.get(id=id)
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Updated !!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request, pk, format=None):
+        id = pk
+        post = PostModel.objects.get(id=id)
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        pdb.set_trace()
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Updated Partially !!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk, format=None):
+        id = pk
+        post = PostModel.objects.get(id=id)
+        post.delete()
+        return Response({'msg': 'Post Deleted !!'})
 
 
-
-@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+"""@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
 @authentication_classes([])
 @permission_classes([])
 def PostApi(request, pk=None):
@@ -59,7 +102,7 @@ def PostApi(request, pk=None):
         id = pk
         post = PostModel.objects.get(id=id)
         post.delete()
-        return Response({'msg': 'Post Deleted !!'})
+        return Response({'msg': 'Post Deleted !!'})"""
 
 
 
