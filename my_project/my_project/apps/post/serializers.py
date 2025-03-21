@@ -13,7 +13,7 @@ class PostSerializer(serializers.ModelSerializer):
     def start_with_p(value):
         if value[0].lower() != 'p':
             raise serializers.ValidationError("Post title must start with p")
-    post_title = serializers.CharField(max_length=100, validators=[start_with_p])
+    # post_title = serializers.CharField(max_length=100, validators=[start_with_p])
     
     post_user_id = serializers.IntegerField()
     class Meta:

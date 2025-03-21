@@ -15,13 +15,13 @@ def get_data(id=None):
     if id is not None:
         data = {'id': id}
     json_data = json.dumps(data)
-    headers = {'content-Type':'application/json'}
+    headers = {'content-Type': 'application/json'}
     r = requests.get(url=URL, data=json_data, headers=headers)
     data = r.json()
     print(data)
 
 
-# get_data()
+# get_data(58)
 
 def post_data():
     data = {
@@ -41,12 +41,12 @@ def post_data():
     # print(type(data))
     print(data)
 
-post_data()
+# post_data()
 
 def update_data():
     data = {
-        'id': 65,
-        'post_title': 'My Nice article',
+        'id': 98,
+        'post_title': 'Nice article',
         # 'post_description': 'I am proud to be an Indian',
         'post_user_id': 2
     }
@@ -54,8 +54,11 @@ def update_data():
     # convert dict to json string
     json_data = json.dumps(data)
 
+    # specify content type in headers
+    headers = {'content-Type': 'application/json'}
+
     # make put request
-    r = requests.put(url=URL, data=json_data)
+    r = requests.put(url=URL, headers=headers, data=json_data)
 
     #parse json reponse
     data = r.json()
@@ -66,13 +69,16 @@ def update_data():
 # update_data()
 
 def delete_data():
-    data = {'id': 66}
+    data = {'id': 97}
 
     # parse dict into json
     json_data = json.dumps(data)
 
+    # specify content type in headers
+    headers = {'content-Type': 'application/json'}
+
     # making delete request
-    r = requests.delete(url=URL, data=json_data)
+    r = requests.delete(url=URL, headers=headers, data=json_data)
 
     # parsing json data into python native data
     data = r.json()
@@ -80,7 +86,7 @@ def delete_data():
     print(data)
 
 
-# delete_data()
+delete_data()
 
 def get_data(id=None):
     data = {}

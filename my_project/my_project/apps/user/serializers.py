@@ -14,7 +14,8 @@ class UserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Must start with r")
         return value
     
-    username = serializers.CharField(max_length=100, validators=[start_with_r])
+    # username = serializers.CharField(max_length=100, validators=[start_with_r])
+    
     class Meta:
         model = User
         fields = ['username', 'email', 'is_staff']

@@ -9,9 +9,60 @@ from django.views import View
 from django.utils.decorators import method_decorator
 import pdb
 
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+
+
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@authentication_classes([])
+@permission_classes([])
+def UserAPI(request, pk=None):
+    if request.method == 'GET':
+        id = pk
+        if id is not None:
+            user = User.objects.get(id=id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        users = User.objects.all()
+        pdb.set_trace()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Created!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    if request.method == 'PUT':
+        id = pk
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Updated !!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'PATCH':
+        id = pk
+        user = User.objects.get(id=id)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Updated Partially'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        id = pk
+        user = User.objects.get(id=id)
+        user.delete()
+        return Response({'msg': 'User Deleted!!'})
 
 # @decorators(name='patch')
-@method_decorator(csrf_exempt, name='dispatch')
+"""@method_decorator(csrf_exempt, name='dispatch')
 class UserAPI(View):
     def get(self, request, *args, **kwargs):
         json_data = request.body
@@ -62,7 +113,7 @@ class UserAPI(View):
         user = User.objects.get(id=id)
         user.delete()
         res = {'msg': 'User Deleted!!'}
-        return JsonResponse(res)
+        return JsonResponse(res)"""
 
 
 

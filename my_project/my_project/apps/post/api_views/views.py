@@ -12,6 +12,75 @@ import pdb
 
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
+from rest_framework import status
+
+
+
+@api_view(['GET', 'POST', 'PUT', 'PATCH', 'DELETE'])
+@authentication_classes([])
+@permission_classes([])
+def PostApi(request, pk=None):
+    if request.method == 'GET':
+        id = pk
+        if id is not None:
+            post = PostModel.objects.get(id=id)
+            serializer = PostSerializer(post)
+            return Response(serializer.data)
+        posts = PostModel.objects.all()
+        serializer = PostSerializer(posts, many=True)
+        return Response(serializer.data)
+    
+    if request.method == 'POST':
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Created!'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'PUT':
+        id = pk
+        post = PostModel.objects.get(id=id)
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Updated!!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    if request.method == 'PATCH':
+        id = pk
+        post = PostModel.objects.get(id=id)
+        serializer = PostSerializer(post, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'Post Updated Partially !!'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'DELETE':
+        id = pk
+        post = PostModel.objects.get(id=id)
+        post.delete()
+        return Response({'msg': 'Post Deleted !!'})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # @api_view()
@@ -31,16 +100,16 @@ from rest_framework.response import Response
 #     print(request.data)
 #     return Response({'msg':'This is a post request.'})
 
-@api_view(['GET', 'POST'])
-@authentication_classes([])
-@permission_classes([])
-def hello_world(request):
-    if request.method == 'GET':
-        return Response({'msg': 'This is a GET Request'})
+# @api_view(['GET', 'POST'])
+# @authentication_classes([])
+# @permission_classes([])
+# def hello_world(request):
+#     if request.method == 'GET':
+#         return Response({'msg': 'This is a GET Request'})
     
-    if request.method == 'POST':
-        print(request.data)
-        return Response({'msg': 'This is a POST Request', 'data': request.data})
+#     if request.method == 'POST':
+#         print(request.data)
+#         return Response({'msg': 'This is a POST Request', 'data': request.data})
 # def post_info(request, pk):
 #     post = PostModel.objects.get(id=pk)
 #     serializer = PostSerializer(post)
