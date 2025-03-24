@@ -17,48 +17,31 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 
 
+# Code for list and create model mixin that don't need pk
 
-
-class UserList(ListModelMixin, GenericAPIView):
+class LCUserAPI(GenericAPIView, ListModelMixin, CreateModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
     
-class CreateUser(CreateModelMixin, GenericAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
-class UserInfo(RetrieveModelMixin, GenericAPIView):
+# Code for detail, patch, update and delete mixin that need pk
+class PRUDUserAPI(GenericAPIView, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
-    
-
-class UpdateUser(UpdateModelMixin, GenericAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
-    
-
-class PatchUser(UpdateModelMixin, GenericAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
-    
-class DeleteUser(DestroyModelMixin, GenericAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

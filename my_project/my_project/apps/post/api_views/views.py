@@ -16,45 +16,33 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveMode
 # from rest_framework import status
 # from rest_framework.views import APIView
 
-class PostList(ListModelMixin, GenericAPIView):
+
+# views for requests containing pk
+class LCPostAPI(GenericAPIView, ListModelMixin, CreateModelMixin):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-    
-class PostCreate(CreateModelMixin, GenericAPIView):
-    queryset = PostModel.objects.all()
-    serializer_class = PostSerializer
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-    
-class PostRetrieve(GenericAPIView, RetrieveModelMixin):
+
+# views receiving request without pk  
+class PRUDPostAPI(GenericAPIView, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
-class PostUpdate(GenericAPIView, UpdateModelMixin):
-    queryset = PostModel.objects.all()
-    serializer_class = PostSerializer
-
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
-class PostPatch(GenericAPIView, UpdateModelMixin):
-    queryset = PostModel.objects.all()
-    serializer_class = PostSerializer
 
     def patch(self, request, *args, **kwargs):
         pdb.set_trace()
         return self.partial_update(request, *args, **kwargs)
-    
-class PostDestroy(GenericAPIView, DestroyModelMixin):
-    queryset = PostModel.objects.all()
-    serializer_class = PostSerializer
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
