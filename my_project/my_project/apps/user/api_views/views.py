@@ -14,7 +14,55 @@ import pdb
 # from rest_framework import status
 # from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+
+
+
+
+class UserList(ListModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+    
+class CreateUser(CreateModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+    
+class UserInfo(RetrieveModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+    
+
+class UpdateUser(UpdateModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+
+class PatchUser(UpdateModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
+    
+class DeleteUser(DestroyModelMixin, GenericAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
 
 
 
