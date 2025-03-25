@@ -23,9 +23,14 @@ import pdb
 
 from rest_framework import viewsets
 
-class PostModelViewSet(viewsets.ModelViewSet):
+class PostReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+
+
+# class PostModelViewSet(viewsets.ModelViewSet):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
 
 
 # class PostViewSet(viewsets.ViewSet):

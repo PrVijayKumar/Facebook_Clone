@@ -3,7 +3,8 @@ from post.api_views import views
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 # router.register('postapi', views.PostViewSet, basename='post')
-router.register('postapi', views.PostModelViewSet, basename='post')
+# router.register('postapi', views.PostModelViewSet, basename='post')
+router.register('postapi', views.PostReadOnlyModelViewSet, basename='post')
 urlpatterns = [
     # path('postinfo/', views.LCPostAPI.as_view(), name='pi'),
     # path('postinfo/<int:pk>/', views.PRUDPostAPI.as_view(), name='pu'),

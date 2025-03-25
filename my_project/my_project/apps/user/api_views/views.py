@@ -21,9 +21,14 @@ import pdb
 # from rest_framework.response import Response
 from rest_framework import viewsets
 
-class UserModelViewSet(viewsets.ModelViewSet):
+class UserReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+# class UserModelViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 
