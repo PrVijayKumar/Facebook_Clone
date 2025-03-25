@@ -9,43 +9,58 @@ from django.views.decorators.csrf import csrf_exempt
 from user.models import User
 from user.serializers import UserSerializer
 import pdb
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
+# from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+# from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 # from rest_framework.decorators import api_view, authentication_classes, permission_classes
 # from rest_framework.response import Response
 # from rest_framework import status
 # from rest_framework.views import APIView
 
-
-# views for requests containing pk
-class LCPostAPI(GenericAPIView, ListModelMixin, CreateModelMixin):
+class CreateListPost(ListCreateAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-# views receiving request without pk  
-class PRUDPostAPI(GenericAPIView, UpdateModelMixin, RetrieveModelMixin, DestroyModelMixin):
+class RetrieveUpdatePost(RetrieveUpdateAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
-    def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
-
-    def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+class RetrieveDestroyPost(RetrieveDestroyAPIView):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
 
 
-    def patch(self, request, *args, **kwargs):
-        pdb.set_trace()
-        return self.partial_update(request, *args, **kwargs)
 
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+# code for concrete api view
+
+
+# class PostList(ListAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+
+# class PostCreate(CreateAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+# class PostDetail(RetrieveAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+# class UpdatePost(UpdateAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+# class DeletePost(DestroyAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+
+
+
+
+
+
 
 """class PostAPI(APIView):
     def get(self, request, pk=None, format=None):
