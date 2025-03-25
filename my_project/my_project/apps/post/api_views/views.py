@@ -18,91 +18,98 @@ import pdb
 # from rest_framework.views import APIView
 
 # from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+# from rest_framework import viewsets, status
+# from rest_framework.response import Response
 
-class PostViewSet(viewsets.ViewSet):
-    def list(self, request):
-        posts = PostModel.objects.all()
-        serializer = PostSerializer(posts, many=True)
-        print("**********List**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        return Response(serializer.data)
+from rest_framework import viewsets
+
+class PostModelViewSet(viewsets.ModelViewSet):
+    queryset = PostModel.objects.all()
+    serializer_class = PostSerializer
+
+
+# class PostViewSet(viewsets.ViewSet):
+#     def list(self, request):
+#         posts = PostModel.objects.all()
+#         serializer = PostSerializer(posts, many=True)
+#         print("**********List**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         return Response(serializer.data)
     
-    def retrieve(self, request, pk=None):
-        print("**********Retrieve**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        id = pk
-        if id is not None:
-            post = PostModel.objects.get(pk=id)
-            serializer = PostSerializer(post)
-            return Response(serializer.data)
+#     def retrieve(self, request, pk=None):
+#         print("**********Retrieve**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         id = pk
+#         if id is not None:
+#             post = PostModel.objects.get(pk=id)
+#             serializer = PostSerializer(post)
+#             return Response(serializer.data)
         
-    def create(self, request):
-        serializer = PostSerializer(data=request.data)
-        print("**********Create**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Post Created!!'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request):
+#         serializer = PostSerializer(data=request.data)
+#         print("**********Create**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'Post Created!!'}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def update(self, request, pk):
-        post = PostModel.objects.get(pk=pk)
-        serializer = PostSerializer(post, data=request.data)
-        print("**********Update**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Post Updated!!'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def update(self, request, pk):
+#         post = PostModel.objects.get(pk=pk)
+#         serializer = PostSerializer(post, data=request.data)
+#         print("**********Update**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'Post Updated!!'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def partial_update(self, request, pk):
-        post = PostModel.objects.get(pk=pk)
-        serializer = PostSerializer(post, data=request.data, partial=True)
-        print("**********Partial Update**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'Post Updated Partially!!'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def partial_update(self, request, pk):
+#         post = PostModel.objects.get(pk=pk)
+#         serializer = PostSerializer(post, data=request.data, partial=True)
+#         print("**********Partial Update**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'Post Updated Partially!!'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, pk):
-        post = PostModel.objects.get(pk=pk)
-        print("**********Destroy**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        post.delete()
-        return Response({'msg': 'Post Deleted!!'})
+#     def destroy(self, request, pk):
+#         post = PostModel.objects.get(pk=pk)
+#         print("**********Destroy**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         post.delete()
+#         return Response({'msg': 'Post Deleted!!'})
 
 
 

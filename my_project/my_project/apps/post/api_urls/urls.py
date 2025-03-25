@@ -2,7 +2,8 @@ from django.urls import path, include
 from post.api_views import views
 from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
-router.register('postapi', views.PostViewSet, basename='post')
+# router.register('postapi', views.PostViewSet, basename='post')
+router.register('postapi', views.PostModelViewSet, basename='post')
 urlpatterns = [
     # path('postinfo/', views.LCPostAPI.as_view(), name='pi'),
     # path('postinfo/<int:pk>/', views.PRUDPostAPI.as_view(), name='pu'),

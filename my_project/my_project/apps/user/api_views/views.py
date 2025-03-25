@@ -17,91 +17,99 @@ import pdb
 # from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 # from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
-from rest_framework import viewsets, status
-from rest_framework.response import Response
+# from rest_framework import viewsets, status
+# from rest_framework.response import Response
+from rest_framework import viewsets
 
-class UserViewSet(viewsets.ViewSet):
-    def list(self, request):
-        users = User.objects.all()
-        serializer = UserSerializer(users, many=True)
-        print("**********list**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        return Response(serializer.data)
+class UserModelViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    def retrieve(self, request, pk=None):
-        id = pk
-        print("**********retrieve**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if id is not None:
-            user = User.objects.get(pk=id)
-            serializer = UserSerializer(user)
-            return Response(serializer.data)
+
+
+
+# class UserViewSet(viewsets.ViewSet):
+#     def list(self, request):
+#         users = User.objects.all()
+#         serializer = UserSerializer(users, many=True)
+#         print("**********list**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         return Response(serializer.data)
+
+#     def retrieve(self, request, pk=None):
+#         id = pk
+#         print("**********retrieve**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if id is not None:
+#             user = User.objects.get(pk=id)
+#             serializer = UserSerializer(user)
+#             return Response(serializer.data)
         
-    def create(self, request):
-        serializer = UserSerializer(data=request.data)
-        print("**********create**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'User Created'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def create(self, request):
+#         serializer = UserSerializer(data=request.data)
+#         print("**********create**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'User Created'}, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def update(self, request, pk):
-        user = User.objects.get(pk=pk)
-        serializer = UserSerializer(user, data=request.data)
-        print("**********update**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'User Updated'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def update(self, request, pk):
+#         user = User.objects.get(pk=pk)
+#         serializer = UserSerializer(user, data=request.data)
+#         print("**********update**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'User Updated'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def partial_update(self, request, pk):
-        user = User.objects.get(pk=pk)
-        serializer = UserSerializer(user, data=request.data, partial=True)
-        print("**********partial update**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({'msg': 'User Update Partially'})
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def partial_update(self, request, pk):
+#         user = User.objects.get(pk=pk)
+#         serializer = UserSerializer(user, data=request.data, partial=True)
+#         print("**********partial update**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response({'msg': 'User Update Partially'})
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def destroy(self, request, pk):
-        user = User.objects.get(pk=pk)
-        print("**********destroy**********")
-        print("basename:", self.basename)
-        print("action:", self.action)
-        print("detail:", self.detail)
-        print("suffix:", self.suffix)
-        print("name:", self.name)
-        print("description:", self.description)
-        user.delete()
-        return Response({'msg': 'User Deleted!!'})
+#     def destroy(self, request, pk):
+#         user = User.objects.get(pk=pk)
+#         print("**********destroy**********")
+#         print("basename:", self.basename)
+#         print("action:", self.action)
+#         print("detail:", self.detail)
+#         print("suffix:", self.suffix)
+#         print("name:", self.name)
+#         print("description:", self.description)
+#         user.delete()
+#         return Response({'msg': 'User Deleted!!'})
 
 
 

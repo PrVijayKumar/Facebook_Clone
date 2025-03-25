@@ -4,7 +4,8 @@ from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
-router.register('userapi', views.UserViewSet, basename='user')
+# router.register('userapi', views.UserViewSet, basename='user')
+router.register('userapi', views.UserModelViewSet, basename='user')
 urlpatterns = [
     # path("user/", views.LCUserAPI.as_view(), name='lcu'),
     # path("user/<int:pk>", views.PRUDUserAPI.as_view(), name='puser'),
