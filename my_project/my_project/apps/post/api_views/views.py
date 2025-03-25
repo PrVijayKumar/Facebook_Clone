@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from user.models import User
 from user.serializers import UserSerializer
 import pdb
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
+# from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 # from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 # from rest_framework.decorators import api_view, authentication_classes, permission_classes
@@ -17,17 +17,29 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, Re
 # from rest_framework import status
 # from rest_framework.views import APIView
 
-class CreateListPost(ListCreateAPIView):
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+
+class ListCreatePost(ListCreateAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
-class RetrieveUpdatePost(RetrieveUpdateAPIView):
+class RetrieveUpdateDestroyPost(RetrieveUpdateDestroyAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
 
-class RetrieveDestroyPost(RetrieveDestroyAPIView):
-    queryset = PostModel.objects.all()
-    serializer_class = PostSerializer
+
+
+# class CreateListPost(ListCreateAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+# class RetrieveUpdatePost(RetrieveUpdateAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+# class RetrieveDestroyPost(RetrieveDestroyAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
 
 
 

@@ -13,21 +13,31 @@ import pdb
 # from rest_framework.response import Response
 # from rest_framework import status
 # from rest_framework.views import APIView
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
+# from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 # from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
+from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 
 class ListCreateUser(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class RetrieveUpdateUser(RetrieveUpdateAPIView):
+class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class RetrieveDestroyUser(RetrieveDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+# class ListCreateUser(ListCreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+# class RetrieveUpdateUser(RetrieveUpdateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+# class RetrieveDestroyUser(RetrieveDestroyAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 
