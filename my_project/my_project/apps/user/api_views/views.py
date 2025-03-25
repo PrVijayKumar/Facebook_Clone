@@ -16,15 +16,66 @@ import pdb
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 # from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+# from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
+from rest_framework import viewsets, status
+from rest_framework.response import Response
 
-class ListCreateUser(ListCreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class UserViewSet(viewsets.ViewSet):
+    def list(self, request):
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
 
-class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    def retrieve(self, request, pk=None):
+        id = pk
+        if id is not None:
+            user = User.objects.get(pk=id)
+            serializer = UserSerializer(user)
+            return Response(serializer.data)
+        
+    def create(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Created'}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def update(self, request, pk):
+        user = User.objects.get(pk=pk)
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Updated'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def partial_update(self, request, pk):
+        user = User.objects.get(pk=pk)
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'msg': 'User Update Partially'})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk):
+        user = User.objects.get(pk=pk)
+        user.delete()
+        return Response({'msg': 'User Deleted!!'})
+
+
+
+
+
+
+
+
+
+# class ListCreateUser(ListCreateAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+
+# class RetrieveUpdateDestroyUser(RetrieveUpdateDestroyAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 # class ListCreateUser(ListCreateAPIView):

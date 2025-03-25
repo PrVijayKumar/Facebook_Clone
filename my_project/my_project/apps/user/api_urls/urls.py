@@ -1,5 +1,10 @@
 from django.urls import path, include
 from user.api_views import views
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+
+router.register('userapi', views.UserViewSet, basename='user')
 urlpatterns = [
     # path("user/", views.LCUserAPI.as_view(), name='lcu'),
     # path("user/<int:pk>", views.PRUDUserAPI.as_view(), name='puser'),
@@ -11,6 +16,7 @@ urlpatterns = [
     # path('user/', views.ListCreateUser.as_view(), name='lcu'),
     # path('user/<int:pk>/', views.RetrieveUpdateUser.as_view(), name='ru'),
     # path('rduser/<int:pk>/', views.RetrieveDestroyUser.as_view(), name='rdu'),
-    path('user/', views.ListCreateUser.as_view(), name='lcu'),
-    path('user/<int:pk>/', views.RetrieveUpdateDestroyUser.as_view(), name='rdup'),
+    # path('user/', views.ListCreateUser.as_view(), name='lcu'),
+    # path('user/<int:pk>/', views.RetrieveUpdateDestroyUser.as_view(), name='rdup'),
+    path('', include(router.urls)),
 ]

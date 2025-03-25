@@ -1,5 +1,8 @@
 from django.urls import path, include
 from post.api_views import views
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
+router.register('postapi', views.PostViewSet, basename='post')
 urlpatterns = [
     # path('postinfo/', views.LCPostAPI.as_view(), name='pi'),
     # path('postinfo/<int:pk>/', views.PRUDPostAPI.as_view(), name='pu'),
@@ -12,6 +15,7 @@ urlpatterns = [
     # path('post/', views.CreateListPost.as_view(), name='lcp'),
     # path('post/<int:pk>/', views.RetrieveUpdatePost.as_view(), name='rup'),
     # path('rdpost/<int:pk>/', views.RetrieveDestroyPost.as_view(), name='rdpost'),
-    path('post/', views.ListCreatePost.as_view(), name='lcp'),
-    path('post/<int:pk>/', views.RetrieveUpdateDestroyPost.as_view(), name='rudp'),
+    # path('post/', views.ListCreatePost.as_view(), name='lcp'),
+    # path('post/<int:pk>/', views.RetrieveUpdateDestroyPost.as_view(), name='rudp'),
+    path('', include(router.urls)),
 ]
