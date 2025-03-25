@@ -25,9 +25,23 @@ class PostViewSet(viewsets.ViewSet):
     def list(self, request):
         posts = PostModel.objects.all()
         serializer = PostSerializer(posts, many=True)
+        print("**********List**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         return Response(serializer.data)
     
     def retrieve(self, request, pk=None):
+        print("**********Retrieve**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         id = pk
         if id is not None:
             post = PostModel.objects.get(pk=id)
@@ -36,6 +50,13 @@ class PostViewSet(viewsets.ViewSet):
         
     def create(self, request):
         serializer = PostSerializer(data=request.data)
+        print("**********Create**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'Post Created!!'}, status=status.HTTP_201_CREATED)
@@ -44,6 +65,13 @@ class PostViewSet(viewsets.ViewSet):
     def update(self, request, pk):
         post = PostModel.objects.get(pk=pk)
         serializer = PostSerializer(post, data=request.data)
+        print("**********Update**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'Post Updated!!'})
@@ -52,6 +80,13 @@ class PostViewSet(viewsets.ViewSet):
     def partial_update(self, request, pk):
         post = PostModel.objects.get(pk=pk)
         serializer = PostSerializer(post, data=request.data, partial=True)
+        print("**********Partial Update**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'Post Updated Partially!!'})
@@ -59,6 +94,13 @@ class PostViewSet(viewsets.ViewSet):
     
     def destroy(self, request, pk):
         post = PostModel.objects.get(pk=pk)
+        print("**********Destroy**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         post.delete()
         return Response({'msg': 'Post Deleted!!'})
 

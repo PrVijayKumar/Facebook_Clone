@@ -24,10 +24,24 @@ class UserViewSet(viewsets.ViewSet):
     def list(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
+        print("**********list**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         return Response(serializer.data)
 
     def retrieve(self, request, pk=None):
         id = pk
+        print("**********retrieve**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if id is not None:
             user = User.objects.get(pk=id)
             serializer = UserSerializer(user)
@@ -35,6 +49,13 @@ class UserViewSet(viewsets.ViewSet):
         
     def create(self, request):
         serializer = UserSerializer(data=request.data)
+        print("**********create**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'User Created'}, status=status.HTTP_201_CREATED)
@@ -43,6 +64,13 @@ class UserViewSet(viewsets.ViewSet):
     def update(self, request, pk):
         user = User.objects.get(pk=pk)
         serializer = UserSerializer(user, data=request.data)
+        print("**********update**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'User Updated'})
@@ -51,6 +79,13 @@ class UserViewSet(viewsets.ViewSet):
     def partial_update(self, request, pk):
         user = User.objects.get(pk=pk)
         serializer = UserSerializer(user, data=request.data, partial=True)
+        print("**********partial update**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         if serializer.is_valid():
             serializer.save()
             return Response({'msg': 'User Update Partially'})
@@ -58,6 +93,13 @@ class UserViewSet(viewsets.ViewSet):
     
     def destroy(self, request, pk):
         user = User.objects.get(pk=pk)
+        print("**********destroy**********")
+        print("basename:", self.basename)
+        print("action:", self.action)
+        print("detail:", self.detail)
+        print("suffix:", self.suffix)
+        print("name:", self.name)
+        print("description:", self.description)
         user.delete()
         return Response({'msg': 'User Deleted!!'})
 
