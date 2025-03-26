@@ -20,16 +20,39 @@ import pdb
 # from rest_framework import viewsets, status
 # from rest_framework.response import Response
 from rest_framework import viewsets
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from .custompermission import MyPermission
 
-class UserReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+class UserModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAdminUser]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [DjangoModelPermissions]
+    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [MyPermission]
+
+
+
+
+
+
 
 
 # class UserModelViewSet(viewsets.ModelViewSet):
 #     queryset = User.objects.all()
 #     serializer_class = UserSerializer
+#     authentication_classes = [BasicAuthentication]
+#     permission_classes = [IsAdminUser]
 
+
+# class UserReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 

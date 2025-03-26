@@ -22,13 +22,31 @@ import pdb
 # from rest_framework.response import Response
 
 from rest_framework import viewsets
-
-class PostReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from user.api_views.custompermission import MyPermission
+class PostModelViewSet(viewsets.ModelViewSet):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+    authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAdminUser]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # permission_classes = [DjangoModelPermissions]
+    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
+    permission_classes = [MyPermission]
+
+
+
 
 
 # class PostModelViewSet(viewsets.ModelViewSet):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+#     authentication_classes = [BasicAuthentication]
+#     permission_classes = [IsAdminUser]
+
+# class PostReadOnlyModelViewSet(viewsets.ReadOnlyModelViewSet):
 #     queryset = PostModel.objects.all()
 #     serializer_class = PostSerializer
 
