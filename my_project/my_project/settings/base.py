@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'fontawesomefree',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [

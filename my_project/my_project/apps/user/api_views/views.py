@@ -22,7 +22,7 @@ import pdb
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
-from .custompermission import MyPermission
+# from .custompermission import MyPermission
 
 class UserModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -34,7 +34,7 @@ class UserModelViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticatedOrReadOnly]
     # permission_classes = [DjangoModelPermissions]
     # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    permission_classes = [MyPermission]
+    # permission_classes = [MyPermission]
 
 
 

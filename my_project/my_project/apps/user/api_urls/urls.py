@@ -1,6 +1,7 @@
 from django.urls import path, include
 from user.api_views import views
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
 
 router = DefaultRouter()
 
@@ -22,4 +23,6 @@ urlpatterns = [
     # path('user/<int:pk>/', views.RetrieveUpdateDestroyUser.as_view(), name='rdup'),
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls', namespace="rest_framework2")),
+    path('gettoken/', obtain_auth_token),
 ]
+# print(path('gettoken/', obtain_auth_token))

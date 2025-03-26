@@ -24,7 +24,7 @@ import pdb
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
-from user.api_views.custompermission import MyPermission
+# from user.api_views.custompermission import MyPermission
 class PostModelViewSet(viewsets.ModelViewSet):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
@@ -34,7 +34,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
     # permission_classes = [IsAuthenticatedOrReadOnly]
     # permission_classes = [DjangoModelPermissions]
     # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]
-    permission_classes = [MyPermission]
+    # permission_classes = [MyPermission]
 
 
 
