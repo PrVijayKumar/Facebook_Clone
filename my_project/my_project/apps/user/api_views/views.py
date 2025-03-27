@@ -20,14 +20,45 @@ import pdb
 # from rest_framework import viewsets, status
 # from rest_framework.response import Response
 from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.authtoken.models import Token
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.conf import settings
+from user.customauth import CustomAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle, ScopedRateThrottle
+from user.throttling import JackRateThrottle
 # from .custompermission import MyPermission
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+
 
 class UserModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+    # throttle_classes = [AnonRateThrottle, JackRateThrottle]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'userscope'
+
+
+
+
+
+# class UserModelViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
+    # authentication_classes = [SessionAuthentication]
+    # authentication_classes = [TokenAuthentication]
+    # authentication_classes = [CustomAuthentication]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
     # permission_classes = [IsAuthenticated]
     # permission_classes = [IsAdminUser]
     # permission_classes = [IsAuthenticatedOrReadOnly]

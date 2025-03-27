@@ -22,13 +22,38 @@ import pdb
 # from rest_framework.response import Response
 
 from rest_framework import viewsets
-from rest_framework.authentication import BasicAuthentication, SessionAuthentication
+from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from user.customauth import CustomAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
+from user.throttling import JackRateThrottle
+from rest_framework.generics import ListAPIView
 # from user.api_views.custompermission import MyPermission
-class PostModelViewSet(viewsets.ModelViewSet):
+class PostList(ListAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
-    authentication_classes = [SessionAuthentication]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'postscope'
+
+
+# class PostModelViewSet(viewsets.ModelViewSet):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+#     authentication_classes = [SessionAuthentication]
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     throttle_classes = [AnonRateThrottle, JackRateThrottle]
+
+
+# class PostModelViewSet(viewsets.ModelViewSet):
+#     queryset = PostModel.objects.all()
+    # serializer_class = PostSerializer
+    # authentication_classes = [SessionAuthentication]
+    # authentication_classes = [TokenAuthentication]
+    # authentication_classes = [CustomAuthentication]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     # permission_classes = [IsAuthenticated]
     # permission_classes = [IsAdminUser]
     # permission_classes = [IsAuthenticatedOrReadOnly]

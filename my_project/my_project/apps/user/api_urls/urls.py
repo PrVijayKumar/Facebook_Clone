@@ -1,8 +1,9 @@
 from django.urls import path, include
 from user.api_views import views
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken.views import obtain_auth_token
-
+# from rest_framework.authtoken.views import obtain_auth_token
+from user.auth import CustomAuthToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 router = DefaultRouter()
 
 # router.register('userapi', views.UserViewSet, basename='user')
@@ -23,6 +24,10 @@ urlpatterns = [
     # path('user/<int:pk>/', views.RetrieveUpdateDestroyUser.as_view(), name='rdup'),
     path('', include(router.urls)),
     path('auth/', include('rest_framework.urls', namespace="rest_framework2")),
-    path('gettoken/', obtain_auth_token),
+    # path('gettoken/', obtain_auth_token),
+    # path('gettoken/', CustomAuthToken.as_view()),
+    path('gettoken/', TokenObtainPairView.as_view(), name="token_obtain"),
+    path('refreshtoken/', TokenRefreshView.as_view(), name="token_refresh"),
+    path('verifytoken/', TokenVerifyView.as_view(), name='refresh_token'),
 ]
 # print(path('gettoken/', obtain_auth_token))
