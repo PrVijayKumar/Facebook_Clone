@@ -30,6 +30,9 @@ from user.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle, ScopedRateThrottle
 from user.throttling import JackRateThrottle
+# from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from user.mypaginations import MyPageNumberPagination
 # from .custompermission import MyPermission
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -43,10 +46,20 @@ class UserModelViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticatedOrReadOnly]
-    # throttle_classes = [AnonRateThrottle, JackRateThrottle]
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'userscope'
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['username', 'email']
+    # search_fields = ['username']
+    # pagination_class = MyPageNumberPagination
 
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['username', 'email']
+    # throttle_classes = [AnonRateThrottle, JackRateThrottle]
+    # throttle_classes = [ScopedRateThrottle]
+    # throttle_scope = 'userscope'
+
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     return User.objects.filter(pk=user.id)
 
 
 

@@ -20,22 +20,52 @@ import pdb
 # from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 # from rest_framework import viewsets, status
 # from rest_framework.response import Response
+# from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
 
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
 from user.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
 from user.throttling import JackRateThrottle
 from rest_framework.generics import ListAPIView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from user.mypaginations import MyPageNumberPagination
 # from user.api_views.custompermission import MyPermission
+
+
 class PostList(ListAPIView):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'postscope'
+    filter_backends = [OrderingFilter]
+    ordering_fields = ['post_title', 'id']
+    # search_fields = ['^post_title']
+    # pagination_class = MyPageNumberPagination
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['post_title', 'post_user_id']
 
+
+
+
+
+# class PostModelViewSet(viewsets.ModelViewSet):
+#     # queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+
+#     def get_queryset(self):
+#         posts = PostModel.objects.filter(post_user_id=self.request.user.id)
+#         return posts
+
+
+
+
+
+# class PostList(ListAPIView):
+#     queryset = PostModel.objects.all()
+#     serializer_class = PostSerializer
+    # throttle_classes = [ScopedRateThrottle]
+    # throttle_scope = 'postscope'
 
 # class PostModelViewSet(viewsets.ModelViewSet):
 #     queryset = PostModel.objects.all()
