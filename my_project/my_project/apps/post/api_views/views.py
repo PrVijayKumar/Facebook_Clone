@@ -1,14 +1,8 @@
 # from django.http import HttpResponse, JsonResponse
 # from django.shortcuts import render
-from post.models import PostModel
-from post.serializers import PostSerializer, CreatePostSerializer
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.parsers import JSONParser
 # import io
-from django.views.decorators.csrf import csrf_exempt
-from user.models import User
-from user.serializers import UserSerializer
-import pdb
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
 # from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
@@ -21,6 +15,13 @@ import pdb
 # from rest_framework import viewsets, status
 # from rest_framework.response import Response
 # from rest_framework.throttling import UserRateThrottle, AnonRateThrottle, ScopedRateThrottle
+# from user.models import User
+# from user.serializers import UserSerializer
+# from .serializers import PostHyperlinkedSerializer
+from post.models import PostModel
+from post.serializers import PostSerializer
+from django.views.decorators.csrf import csrf_exempt
+import pdb
 
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
@@ -31,15 +32,45 @@ from user.throttling import JackRateThrottle
 from rest_framework.generics import ListAPIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from user.mypaginations import MyPageNumberPagination
+from user.mypaginations import MyPageNumberPagination, MyCursorPagination
+from rest_framework.pagination import LimitOffsetPagination, CursorPagination
+from django.urls import reverse
+from post import urls
 # from user.api_views.custompermission import MyPermission
 
-
-class PostList(ListAPIView):
+class PostModelViewSet(viewsets.ModelViewSet):
     queryset = PostModel.objects.all()
     serializer_class = PostSerializer
-    filter_backends = [OrderingFilter]
-    ordering_fields = ['post_title', 'id']
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['post_title']
+    pagination_class = MyPageNumberPagination
+
+
+
+
+# class PostModelViewSet(viewsets.ModelViewSet):
+#     # queryset = PostModel.objects.all()
+#     serializer_class = PostHyperlinkedSerializer
+
+#     def get_queryset(self):
+#         # breakpoint()
+#         print(reverse('post_api:post-detail', kwargs={'pk': 5} ))
+#         return PostModel.objects.all()
+    
+
+
+# class PostList(ListAPIView):
+#     queryset = PostModel.objects.all()
+#     # serializer_class = PostSerializer
+#     serializer_class = PostHyperlinkedSerializer
+#     pagination_class = MyCursorPagination
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+
+    # filter_backends = [OrderingFilter]
+    # ordering_fields = ['post_title', 'id']
     # search_fields = ['^post_title']
     # pagination_class = MyPageNumberPagination
     # filter_backends = [DjangoFilterBackend]

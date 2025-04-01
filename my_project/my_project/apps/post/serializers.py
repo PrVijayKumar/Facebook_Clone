@@ -1,37 +1,52 @@
+# from user.serializers import UserSerializer
 from rest_framework import serializers
 from .models import PostModel
 from django.utils import timezone
-from user.serializers import UserSerializer
-
-def post_starts_with_p(value):
-    if value[0].lower() != 'p':
-        raise serializers.ValidationError("Post must start with P")
-    return value
 
 class PostSerializer(serializers.ModelSerializer):
-    # post_user = UserSerializer()
-    def start_with_p(value):
-        if value[0].lower() != 'p':
-            raise serializers.ValidationError("Post title must start with p")
-    # post_title = serializers.CharField(max_length=100, validators=[start_with_p])
-    
-    post_user_id = serializers.IntegerField()
+    pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
     class Meta:
         model = PostModel
-        fields = ['id', 'post_title', 'post_description', 'post_date', 'post_user_id']
+        fields = ['id', 'post_title', 'post_description', 'post_date', 'post_user', 'pcom']
 
-    def validate_post_user_id(self, value):
-        if value > 3:
-            raise serializers.ValidationError('User must have id less than 3')
-        return value
+
+
+
+
+# def post_starts_with_p(value):
+#     if value[0].lower() != 'p':
+#         raise serializers.ValidationError("Post must start with P")
+#     return value
+
+# class PostSerializer(serializers.ModelSerializer):
+#     # post_user = UserSerializer()
+#     def start_with_p(value):
+#         if value[0].lower() != 'p':
+#             raise serializers.ValidationError("Post title must start with p")
+    # post_title = serializers.CharField(max_length=100, validators=[start_with_p])
     
-    def validate(self, data):
-        pt = data.get('post_title')
-        pd = data.get('post_description')
+    # post_user_id = serializers.IntegerField()
+    # post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+    # post_user = serializers.StringRelatedField(read_only=True)
+    # post_user = serializers.PrimaryKeyRelatedField(read_only=True)
+    # post_user = serializers.HyperlinkedRelatedField(read_only=True, view_name='user-detail')
+    # pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
+    # class Meta:
+    #     model = PostModel
+    #     fields = ['id', 'post_title', 'post_description', 'post_date', 'post_user', 'pcom', 'post_likes']
 
-        if pt.lower() == 'india' and pd.lower() == 'illegal post':
-            raise serializers.ValidationError('illegal post not allowed')
-        return data
+    # def validate_post_user_id(self, value):
+    #     if value > 3:
+    #         raise serializers.ValidationError('User must have id less than 3')
+    #     return value
+    
+    # def validate(self, data):
+    #     pt = data.get('post_title')
+    #     pd = data.get('post_description')
+
+    #     if pt.lower() == 'india' and pd.lower() == 'illegal post':
+    #         raise serializers.ValidationError('illegal post not allowed')
+    #     return data
 
         
 # class PostSerializer(serializers.Serializer):

@@ -1,25 +1,26 @@
-# from django.http import HttpResponse, JsonResponse
-from user.serializers import UserSerializer, CreateUserSerializer
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render
+# from user.api_views.serializers import UserHyperlinkedSerializer
 # from rest_framework.renderers import JSONRenderer
 # from rest_framework.parsers import JSONParser
-from user.models import User
 # import io
 # from django.views.decorators.csrf import csrf_exempt
 # from django.views import View
 # from django.utils.decorators import method_decorator
-import pdb
+# import pdb
 
-# from rest_framework.decorators import api_view, authentication_classes, permission_classes
-# from rest_framework.response import Response
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
 # from rest_framework import status
-# from rest_framework.views import APIView
+from rest_framework.views import APIView
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView
-# from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.generics import GenericAPIView, ListAPIView, CreateAPIView, RetrieveAPIView, UpdateAPIView, DestroyAPIView
 # from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 # from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
-# from rest_framework import viewsets, status
+from rest_framework import viewsets, status
 # from rest_framework.response import Response
-from rest_framework import viewsets
+from user.models import User
+from user.serializers import UserSerializer, UserRegisterSerializer
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
 from rest_framework.authtoken.models import Token
@@ -32,7 +33,10 @@ from rest_framework.throttling import AnonRateThrottle, UserRateThrottle, Scoped
 from user.throttling import JackRateThrottle
 # from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from user.mypaginations import MyPageNumberPagination
+from user.mypaginations import MyPageNumberPagination, MyCursorPagination
+from rest_framework.pagination import LimitOffsetPagination, CursorPagination
+from user.forms import UserCreationForm
+from rest_framework.renderers import TemplateHTMLRenderer
 # from .custompermission import MyPermission
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -40,14 +44,43 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
-
 class UserModelViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    filter_backends = [OrderingFilter]
-    ordering_fields = ['username', 'email']
+    permission_classes = [IsAuthenticated]
+    filter_backends = [SearchFilter]
+    search_fields = ['username']
+    throttle_classes = [AnonRateThrottle]
+    pagination_class = MyCursorPagination
+
+
+class RegisterAPI(GenericAPIView):
+    serializer_class = UserRegisterSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response({
+            'user': UserSerializer(user, context=self.get_serializer_context()).data
+        })
+
+
+
+
+# class UserModelViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     # serializer_class = UserSerializer
+#     serializer_class = UserHyperlinkedSerializer
+#     pagination_class = MyCursorPagination
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
+    # filter_backends = [OrderingFilter]
+    # ordering_fields = ['username', 'email']
     # search_fields = ['username']
     # pagination_class = MyPageNumberPagination
 

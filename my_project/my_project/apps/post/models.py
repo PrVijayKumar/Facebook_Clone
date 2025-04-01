@@ -7,8 +7,9 @@ import datetime
 # Create your models here.
 class PostModel(models.Model):
     post_title = models.CharField(max_length=200)
-    post_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
-    post_description = models.CharField(max_length=200)
+    # post_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="postname")
+    post_user = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="postname")
+    post_description = models.TextField()
     post_content = models.ImageField(upload_to='images/')
     post_date = models.DateTimeField(default=timezone.now)
     post_updated_date = models.DateTimeField(default=timezone.now)
@@ -20,7 +21,7 @@ class PostModel(models.Model):
 
 class PostLikes(models.Model):
     post_id = models.ForeignKey(PostModel, on_delete=models.CASCADE)
-    liked_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    liked_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='users')
 
     def __str__(self):
         return str(self.post_id)
@@ -39,8 +40,8 @@ class PostLikes(models.Model):
 
 class PostComments(models.Model):
     comment_desc = models.CharField(max_length=200, null=False)
-    post = models.ForeignKey(PostModel, on_delete=models.CASCADE)
-    com_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(PostModel, on_delete=models.CASCADE, related_name="pcom")
+    com_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="commenters")
     com_date = models.DateTimeField(default=timezone.now)
     com_reply = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="repliers", null=True)
     com_likes = models.PositiveIntegerField(default=0)

@@ -5,8 +5,16 @@ from .forms import UserRegistrationForm, AuthenticationForm #  , PostForm
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from post.models import PostModel, PostLikes
-
+from rest_framework import viewsets
+# from .serializers import UserHyperlinkedSerializer
+from .models import User
 # Create your views here.
+
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer = UserHyperlinkedSerializer
+
+
 
 def register(request):
     if request.method == 'POST':
