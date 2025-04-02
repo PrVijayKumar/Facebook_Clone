@@ -181,13 +181,14 @@ REST_FRAMEWORK = {
     # 'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'SEARCH_PARAM': 'q',
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
+    'EXCEPTION_HANDLER': 'user.utils.custom_exception_handler',
     # 'DEFAULT_RENDERER_CLASSES': ['rest_framework.renderers.JSONRenderer',]
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE': 5,
@@ -199,3 +200,11 @@ SIMPLE_JWT = {
 
 
 # DJANGO_SETTINGS_MODULE = myproject.settings.base
+
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'vijaychoudhary@thoughtwin.com'
+EMAIL_HOST_PASSWORD = 'ihwr odop slyc weah'
+EMAIL_USE_TLS = True
+

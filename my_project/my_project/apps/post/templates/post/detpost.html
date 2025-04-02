@@ -13,7 +13,9 @@
     <br>
     {% endif %}
     <span id="ptitle">{{post.post_title}}</span><br>
-    <img src="{{ post.post_content.url }}"  height="300"/>
+    {% if post.post_content %}
+      <img src="{{ post.post_content.url }}"  height="300"/>
+    {% endif%}
     Posted By: <span>{{ post.post_user }}</span><br>
     <div id="desc">
         <span ><span id="desct">Description: </span><span class="mydesc">{{ post.post_description }}</span></span>

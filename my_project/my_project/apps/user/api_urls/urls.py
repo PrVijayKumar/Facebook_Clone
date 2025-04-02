@@ -29,6 +29,8 @@ urlpatterns = [
     # path('gettoken/', CustomAuthToken.as_view()),
     path('', include(router.urls)),
     path('register/', views.RegisterAPI.as_view(), name='create_apiuser'),
+    path('login/', views.LoginAPI.as_view(), name='login_apiuser'),
+    path('logout/', views.LogoutAPI.as_view(), name='logout_apiuser'),
     path('auth/', include('rest_framework.urls', namespace="rest_framework2")),
     path('gettoken/', TokenObtainPairView.as_view(), name="token_obtain"),
     path('refreshtoken/', TokenRefreshView.as_view(), name="token_refresh"),

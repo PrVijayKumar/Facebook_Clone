@@ -36,16 +36,27 @@ from user.mypaginations import MyPageNumberPagination, MyCursorPagination
 from rest_framework.pagination import LimitOffsetPagination, CursorPagination
 from django.urls import reverse
 from post import urls
+from django.contrib.auth import login
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from user.api_views.custompermission import MyPermission
 
 class PostModelViewSet(viewsets.ModelViewSet):
-    queryset = PostModel.objects.all()
+    # http_method_names = ['get', 'post', 'patch', 'put', 'delete']
+    # queryset = PostModel.objects.all()
     serializer_class = PostSerializer
+    # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
     search_fields = ['post_title']
     pagination_class = MyPageNumberPagination
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            posts = PostModel.objects.all()
+        else:
+            posts = PostModel.objects.filter(post_user_id=self.request.user.id)
+        return posts
 
 
 

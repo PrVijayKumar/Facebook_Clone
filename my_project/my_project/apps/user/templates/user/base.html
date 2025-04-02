@@ -21,7 +21,7 @@
     <body>
         <div>
             {% if messages %} {% for message in messages %}
-            <div style="background:green; color: white;"><h1>{{message}}</h1></div>
+            <div style="background:green; color: white;" id="nmsg"><h1>{{message}}</h1></div>
             {% endfor %} {% endif %}
             {% block content %}
             {% endblock %}

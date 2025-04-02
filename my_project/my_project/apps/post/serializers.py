@@ -2,12 +2,25 @@
 from rest_framework import serializers
 from .models import PostModel
 from django.utils import timezone
+from rest_framework.response import Response
 
 class PostSerializer(serializers.ModelSerializer):
     pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
+    # post_user = serializers.ChoiceField(default='vijay', choices=('vijay', 'namo'))
+
+    # def _user(self, obj):
+    #     request = self.context.get('request', None)
+    #     if request:
+    #         return str(request.user)
     class Meta:
         model = PostModel
-        fields = ['id', 'post_title', 'post_description', 'post_date', 'post_user', 'pcom']
+        fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'pcom']
+        read_only_fields = ['post_date']
+
+    def create(self, validated_data):
+        validated_data['post_user'] = self.request.user.username
+        return super().create(validated_data)
+        
 
 
 

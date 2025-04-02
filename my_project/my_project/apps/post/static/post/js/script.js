@@ -146,8 +146,15 @@ delbtns.forEach(btn => btn.addEventListener('click', () => {
 //     xhttp.send(form);
 // }
 
-
 $(document).ready(function() {
+    // console.log("Ready")
+    setTimeout(function(event){
+            $('div#nmsg').remove()
+            console.log("Working")
+        }, 5000)
+
+    
+
 
     $("#uform").submit(function(event) {
         event.preventDefault();

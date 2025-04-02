@@ -8,6 +8,10 @@ from post.models import PostModel, PostLikes
 from rest_framework import viewsets
 # from .serializers import UserHyperlinkedSerializer
 from .models import User
+from django.core.mail import send_mail, EmailMultiAlternatives, send_mass_mail, EmailMessage
+from email.mime.image import MIMEImage
+import pathlib
+# from django.template.loader import render_to_string
 # Create your views here.
 
 # class UserViewSet(viewsets.ModelViewSet):
@@ -22,6 +26,14 @@ def register(request):
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            send_mail(
+                "Welcome to Facebook Clone!",
+                f"Hy {username}, Connect with your friends and communities with Facebook Clone Project.",
+                "vijaychoudhary@thoughtwin.com",
+                [email],
+                fail_silently=False
+            )
             messages.success(request, f'Account created for {username}')
             return redirect('user:login-page')
     else:
@@ -30,6 +42,71 @@ def register(request):
 
 
 def login(request):
+
+    # send_mail(
+    #     'Testing',
+    #     'Hy Vijay Choudhary How are you',
+    #     'vijaychoudhary@thoughtwin.com',
+    #     ['vijay24082000@gmail.com'],
+    #     fail_silently=False
+    # )
+
+    # text_content = "Hello Vijay Following is your Secret Key"
+
+    # html_content = "<H1>Professor</H1><p>To Become a Professor you should have good <b>communication skills</b> and <i>command on your subject</i></p>"
+
+    # msg = EmailMultiAlternatives(
+    #     'Testing Multi Alternatives',
+    #     text_content,
+    #     'vijaychoudhary@thoughtwin.com',
+    #     ['vijay24082000@gmail.com'],
+    # )
+
+    # msg.attach_alternative(html_content, 'text/html')
+    # num = msg.send()
+    # print("Number of mails", num)
+
+    # message1 = (
+    #     "First Message",
+    #     "Hello mail for understanding send_mass_mail",
+    #     "vijaychoudhary@thoughtwin.com",
+    #     ["vijay24082000@gmail.com"]
+    # )
+
+    # message2 = (
+    #     "Second Message",
+    #     "Hello sending multple mails at once without opening connection again and again",
+    #     "vijaychoudhary@gmail.com",
+    #     ["gaurav@thoughtwin.com", "divyanshyadav@thoughtwin.com"]
+    # )
+
+    # num = send_mass_mail((message1, message2), fail_silently=False)
+
+    # print(num)
+
+    # email = EmailMessage(
+    #     "Example Mail",
+    #     "I am learning email through django",
+    #     "vijaychoudhary@thoughtwin.com",
+    #     ["vijay24082000@gmail.com"],
+    #     reply_to=["vijaychoudhary@thoughtwin"],
+    #     headers={"My-Header": "This is a header"}
+    # )
+    # breakpoint()
+    # print(pathlib.Path(__file__).parent.parent.parent.resolve()/'media/images'/'crow_1JMfgUW.png')
+    path = pathlib.Path(__file__).parent.parent.parent.resolve()/'media/images'/'449195169_1720433388491215_1556072659052802667_n_2axw1hM.png'
+    # img_data = open(path, 'rb').read()
+    # msgImg = MIMEImage(img_data, 'png')
+
+    # email.attach(msgImg)
+    # email.attach_file('../../../media/images/449195169_1720433388491215_1556072659052802667_n_2axw1hM.png')
+    # num = email.send(fail_silently=False)
+    # print(email.message())
+    # print(email.recipients())
+    # print(num)
+    
+
+
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']

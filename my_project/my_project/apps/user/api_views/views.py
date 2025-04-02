@@ -22,7 +22,7 @@ from rest_framework import viewsets, status
 from user.models import User
 from user.serializers import UserSerializer, UserRegisterSerializer
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
 from rest_framework.authtoken.models import Token
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -37,6 +37,8 @@ from user.mypaginations import MyPageNumberPagination, MyCursorPagination
 from rest_framework.pagination import LimitOffsetPagination, CursorPagination
 from user.forms import UserCreationForm
 from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from django.contrib.auth import login
 # from .custompermission import MyPermission
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -45,10 +47,12 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 class UserModelViewSet(viewsets.ModelViewSet):
+    # http_method_names = ['get', 'post', 'put', 'patch', 'delete']
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [DjangoModelPermissions]
     filter_backends = [SearchFilter]
     search_fields = ['username']
     throttle_classes = [AnonRateThrottle]
@@ -66,8 +70,35 @@ class RegisterAPI(GenericAPIView):
         return Response({
             'user': UserSerializer(user, context=self.get_serializer_context()).data
         })
+    
+class LoginAPI(GenericAPIView):
+    serializer_class = AuthTokenSerializer
+    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        serializer = AuthTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        login(request, user)
+        return Response({
+            'user': UserSerializer(user, context=self.get_serializer_context()).data
+        })
+        # return super(LoginAPI, self).post(request)
 
 
+class LogoutAPI(GenericAPIView):
+    serializer_class = AuthTokenSerializer
+    permission_class = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        request.user.auth_token.delete()
+        try:
+            return Response({
+                'message': 'Successfully logged out'
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 # class UserModelViewSet(viewsets.ModelViewSet):

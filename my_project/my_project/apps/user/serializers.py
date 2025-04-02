@@ -2,11 +2,12 @@ from rest_framework import serializers
 # from .models import User
 from django.contrib.auth.models import User
 from post.serializers import PostSerializer
+import re
 class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True, source='postname')
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_staff', 'posts']
+        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts']
 
 # accounts/serializers.py
 
@@ -14,13 +15,20 @@ class UserSerializer(serializers.ModelSerializer):
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
-
+        breakpoint()
+        if (validated_data['email'] != '') and (bool(re.search("^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", validated_data['email']))):
+            if ('first_name' in validated_data and 'last_name' in validated_data):
+                user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
+            else:
+                user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+        else:
+            raise serializers.ValidationError({"email": "Enter a valid email address"})
         return user
+
 
 
 
