@@ -25,7 +25,7 @@ import pdb
 
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoObjectPermissions
 from user.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from user.throttling import JackRateThrottle
@@ -38,7 +38,48 @@ from django.urls import reverse
 from post import urls
 from django.contrib.auth import login
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+import logging
+from rest_framework import permissions
 # from user.api_views.custompermission import MyPermission
+
+logger = logging.getLogger(__name__)
+class PostModelPermissions(DjangoObjectPermissions):
+    perms_map = {
+        'GET': ['%(app_label)s.view_%(model_name)s'],
+        'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+        'HEAD': ['%(app_label)s.view_%(model_name)s'],
+        'POST': ['%(app_label)s.add_%(model_name)s'],
+        'PUT': ['%(app_label)s.change_%(model_name)s'],
+        'PATCH': ['%(app_label)s.change_%(model_name)s'],
+        'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+    }
+
+    logger.info('in PostModelPermissions')
+
+    def has_permission(self, request, view):
+        if request.method == 'GET':
+            return request.user.is_authenticated
+        elif request.method == 'POST':
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        logger.info('in PostModelPermissions has_object_permission')
+        print('permissions.SAFE_METHODS: ', permissions.SAFE_METHODS)
+        breakpoint()
+        if request.method in permissions.SAFE_METHODS:
+            # return request.user == obj.owner or True # need to modify so can see own stuff
+            # breakpoint()
+            return request.user.id == obj.post_user.id or True # need to modify so can see own stuff
+        elif request.method == 'PATCH':
+            # return request.user == obj.owner
+            # breakpoint()
+            return request.user.id == obj.post_user.id or request.user.is_staff
+        elif request.method == 'DELETE':
+            # return request.user == obj.owner
+            return request.user.id == obj.post_user.id or request.user.is_staff
+        elif request.method == 'PUT':
+            return request.user.id == obj.post_user.id or request.user.is_staff
+        return False
 
 class PostModelViewSet(viewsets.ModelViewSet):
     # http_method_names = ['get', 'post', 'patch', 'put', 'delete']
@@ -46,7 +87,7 @@ class PostModelViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated | IsAdminUser]
     filter_backends = [SearchFilter]
     search_fields = ['post_title']
     pagination_class = MyPageNumberPagination
@@ -55,7 +96,8 @@ class PostModelViewSet(viewsets.ModelViewSet):
         if self.request.user.is_superuser:
             posts = PostModel.objects.all()
         else:
-            posts = PostModel.objects.filter(post_user_id=self.request.user.id)
+            posts = PostModel.objects.all()
+            # posts = PostModel.objects.filter(post_user_id=self.request.user.id)
         return posts
 
 
@@ -71,6 +113,50 @@ class PostModelViewSet(viewsets.ModelViewSet):
 #         return PostModel.objects.all()
     
 
+# class SampleModelPermissions(DjangoObjectPermissions):
+#     perms_map = {
+#         'GET': ['%(app_label)s.view_%(model_name)s'],
+#         'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+#         'HEAD': ['%(app_label)s.view_%(model_name)s'],
+#         'POST': ['%(app_label)s.add_%(model_name)s'],
+#         'PUT': ['%(app_label)s.change_%(model_name)s'],
+#         'PATCH': ['%(app_label)s.change_%(model_name)s'],
+#         'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+#     }
+
+#     logger.info('in SampleModelPermissions')
+
+#     def has_permission(self, request, view):
+#         logger.info('in SampleModelPermissions has_permission')
+#         # if request.method in permissions.SAFE_METHODS:
+#         if request.method in permissions.SAFE_METHODS:
+#             logger.info('SampleModelPermissions: has_permission: listing samples for user: ' + str(request.user.id))
+#             return True
+#         elif request.method == 'POST':
+#             suggested_owner = None
+#             try:
+#                 logger.info('SampleModelPermissions: has_permission: request dict should have a suggested owner: ' + str(dict(request.data.iterlists())))
+#                 # breakpoint()
+#                 suggested_owner = int(dict(request.data.lists())['owner_id'][0])
+#             except:
+#                 logger.error('SampleModelPermissions: has_permission: request made without owner_id: ' + str(dict(request.data.lists())))
+#                 return False
+#             return request.user.id == suggested_owner
+
+#     def has_object_permission(self, request, view, obj):
+#         logger.info('in SampleModelPermissions has_object_permission')
+#         print('permissions.SAFE_METHODS: ', permissions.SAFE_METHODS)
+#         if request.method in permissions.SAFE_METHODS:
+#             # return request.user == obj.owner or True # need to modify so can see own stuff
+#             # breakpoint()
+#             return request.user.id == obj.post_user.id or True # need to modify so can see own stuff
+#         elif request.method == 'PATCH':
+#             # return request.user == obj.owner
+#             return request.user.id == obj.post_user.id
+#         elif request.method == 'DELETE':
+#             # return request.user == obj.owner
+#             return request.user.id == obj.post_user.id
+#         return False
 
 # class PostList(ListAPIView):
 #     queryset = PostModel.objects.all()

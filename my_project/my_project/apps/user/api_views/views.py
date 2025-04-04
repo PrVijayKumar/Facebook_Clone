@@ -22,7 +22,7 @@ from rest_framework import viewsets, status
 from user.models import User
 from user.serializers import UserSerializer, UserRegisterSerializer
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoModelPermissionsOrAnonReadOnly, DjangoModelPermissions, DjangoObjectPermissions
 from rest_framework.authtoken.models import Token
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -39,6 +39,8 @@ from user.forms import UserCreationForm
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from django.contrib.auth import login
+import logging
+from rest_framework import permissions
 # from .custompermission import MyPermission
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -46,17 +48,28 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
 
+
+logger = logging.getLogger(__name__)
+
+
+
+
 class UserModelViewSet(viewsets.ModelViewSet):
     # http_method_names = ['get', 'post', 'put', 'patch', 'delete']
-    queryset = User.objects.all()
+    # queryset = User.objects.all()
     serializer_class = UserSerializer
     # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
-    permission_classes = [DjangoModelPermissions]
+    permission_classes = [IsAuthenticated]
     filter_backends = [SearchFilter]
     search_fields = ['username']
     throttle_classes = [AnonRateThrottle]
     pagination_class = MyCursorPagination
+
+    def get_queryset(self):
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return User.objects.all()
+        return User.objects.filter(id=self.request.user.id)
 
 
 class RegisterAPI(GenericAPIView):
@@ -100,6 +113,45 @@ class LogoutAPI(GenericAPIView):
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+# class UserModelPermissions(DjangoObjectPermissions):
+#     perms_map = {
+#         'GET': ['%(app_label)s.view_%(model_name)s'],
+#         'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+#         'HEAD': ['%(app_label)s.view_%(model_name)s'],
+#         'POST': ['%(app_label)s.add_%(model_name)s'],
+#         'PUT': ['%(app_label)s.change_%(model_name)s'],
+#         'PATCH': ['%(app_label)s.change_%(model_name)s'],
+#         'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+#     }
+
+    # logger.info('in UserModelPermissions')
+    # # permissions.SAFE_METHODS = ('GET', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS')
+    # def has_permission(self, request, view):
+    #     if request.method == 'GET':
+    #         breakpoint()
+    #         return True
+    #     elif request.method == 'POST':
+    #         return request.user.is_staff
+
+    # def has_object_permission(self, request, view, obj):
+    #     breakpoint()
+    #     logger.info('in UserModelPermissions has_object_permission')
+    #     print('permissions.SAFE_METHODS: ', permissions.SAFE_METHODS)
+    #     if request.method in permissions.SAFE_METHODS:
+    #         # return request.user == obj.owner or True # need to modify so can see own stuff
+    #         # breakpoint()
+    #         return request.user.id == obj.id or True  # need to modify so can see own stuff
+    #     elif request.method == 'PATCH':
+    #         # breakpoint()
+    #         # return request.user == obj.owner
+    #         return request.user.id == obj.id or request.user.is_staff
+    #     elif request.method == 'DELETE':
+    #         # return request.user == obj.owner
+    #         return request.user.id == obj.id or request.user.is_staff
+    #     elif request.method == 'PUT':
+    #         return request.user.id == obj.id or request.user.is_staff
+    #     return False
+    #     # return request.user.id == obj.id
 
 # class UserModelViewSet(viewsets.ModelViewSet):
 #     queryset = User.objects.all()

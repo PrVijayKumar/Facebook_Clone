@@ -8,7 +8,7 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if isinstance(exc, IntegrityError) and not response:
-        breakpoint()
+        # breakpoint()
         if 'empty_email' in str(exc):
             response = Response(
                 {

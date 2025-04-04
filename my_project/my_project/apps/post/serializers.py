@@ -6,23 +6,45 @@ from rest_framework.response import Response
 
 class PostSerializer(serializers.ModelSerializer):
     pcom = serializers.SlugRelatedField(many=True, read_only=True, slug_field='comment_desc')
+    post_user = serializers.SlugRelatedField(read_only=True, slug_field='username')
+
+    def _user(self, obj):
+        request = self.context.get('request', None)
+        if request:
+            # breakpoint()
+            return request.user.username
+    
+    class Meta:
+        model = PostModel
+        fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'pcom']
+        read_only_fields = ['post_date', 'post_user']
+
+    def create(self, validated_data):
+        # breakpoint()
+        validated_data['post_user'] = self.context['request'].user
+        return super().create(validated_data)
+        
+
+    # def __init__(self, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     # self.current_user = self._user(self)
+    #     breakpoint()
+    #     self.fields['current_user'].disabled = True
+
+        # create_only_fields = ['current_uesr']
+        # extra_kwargs = {
+        #     'current_user': {
+        #         'default': serializers.SerializerMethodField('_user'),
+        #     }
+        # }
+    # current_user = serializers.SerializerMethodField('_user')
+    # current_user = serializers.CharField(max_length=255)
     # post_user = serializers.ChoiceField(default='vijay', choices=('vijay', 'namo'))
 
     # def _user(self, obj):
     #     request = self.context.get('request', None)
     #     if request:
     #         return str(request.user)
-    class Meta:
-        model = PostModel
-        fields = ['id', 'post_title', 'post_description', 'post_content', 'post_date', 'post_user', 'pcom']
-        read_only_fields = ['post_date']
-
-    def create(self, validated_data):
-        validated_data['post_user'] = self.request.user.username
-        return super().create(validated_data)
-        
-
-
 
 
 

@@ -8,6 +8,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts']
+        write_only_fields = ['is_staff', 'first_name', 'last_name']
+        extra_kwargs = {
+            'is_staff': {'write_only': True},
+            'first_name': {'write_only': True},
+            'last_name': {'write_only': True}
+        }
 
 # accounts/serializers.py
 
@@ -19,7 +25,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        breakpoint()
+        # breakpoint()
         if (validated_data['email'] != '') and (bool(re.search("^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", validated_data['email']))):
             if ('first_name' in validated_data and 'last_name' in validated_data):
                 user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
