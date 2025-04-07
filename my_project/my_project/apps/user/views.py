@@ -8,9 +8,9 @@ from post.models import PostModel, PostLikes
 from rest_framework import viewsets
 # from .serializers import UserHyperlinkedSerializer
 from .models import User
-from django.core.mail import send_mail, EmailMultiAlternatives, send_mass_mail, EmailMessage
 from email.mime.image import MIMEImage
 import pathlib
+from user.tasks import user_reg_email
 # from django.template.loader import render_to_string
 # Create your views here.
 
@@ -27,13 +27,7 @@ def register(request):
             form.save()
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
-            send_mail(
-                "Welcome to Facebook Clone!",
-                f"Hy {username}, Connect with your friends and communities with Facebook Clone Project.",
-                "vijaychoudhary@thoughtwin.com",
-                [email],
-                fail_silently=False
-            )
+            result = user_reg_email.delay(username, email)
             messages.success(request, f'Account created for {username}')
             return redirect('user:login-page')
     else:

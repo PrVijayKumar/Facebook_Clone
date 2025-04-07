@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'django_filters',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -210,4 +211,13 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = 'vijaychoudhary@thoughtwin.com'
 EMAIL_HOST_PASSWORD = 'ihwr odop slyc weah'
 EMAIL_USE_TLS = True
+
+# Celery Configuration Options
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+# CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXTENDED = True
+CELERY_TIMEZONE = "Asia/Kolkata"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
 
