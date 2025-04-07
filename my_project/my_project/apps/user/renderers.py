@@ -13,6 +13,11 @@ class MyBrowsableAPIRenderer(BrowsableAPIRenderer):
         response = args[2]['response']
         user = args[2]['request'].user
         # breakpoint()
+        if not user.is_superuser:
+            # context['raw_data_post_form'].fields.pop('password')
+            # context.pop('post_form').fields.pop('password')
+            pass
+        
         if not user.is_staff and 'UserSerializer' in str(context['view'].serializer_class):
             # for field in context['raw_data_post_form'].fields:
             context.pop('raw_data_post_form')

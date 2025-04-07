@@ -25,7 +25,7 @@ import pdb
 
 from rest_framework import viewsets
 from rest_framework.authentication import BasicAuthentication, SessionAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoObjectPermissions
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser, IsAuthenticatedOrReadOnly, DjangoObjectPermissions, BasePermission
 from user.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from user.throttling import JackRateThrottle
@@ -43,51 +43,85 @@ from rest_framework import permissions
 # from user.api_views.custompermission import MyPermission
 
 logger = logging.getLogger(__name__)
-class PostModelPermissions(DjangoObjectPermissions):
-    perms_map = {
-        'GET': ['%(app_label)s.view_%(model_name)s'],
-        'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
-        'HEAD': ['%(app_label)s.view_%(model_name)s'],
-        'POST': ['%(app_label)s.add_%(model_name)s'],
-        'PUT': ['%(app_label)s.change_%(model_name)s'],
-        'PATCH': ['%(app_label)s.change_%(model_name)s'],
-        'DELETE': ['%(app_label)s.delete_%(model_name)s'],
-    }
+# class PostModelPermissions(DjangoObjectPermissions):
+#     perms_map = {
+#         'GET': ['%(app_label)s.view_%(model_name)s'],
+#         'OPTIONS': ['%(app_label)s.view_%(model_name)s'],
+#         'HEAD': ['%(app_label)s.view_%(model_name)s'],
+#         'POST': ['%(app_label)s.add_%(model_name)s'],
+#         'PUT': ['%(app_label)s.change_%(model_name)s'],
+#         'PATCH': ['%(app_label)s.change_%(model_name)s'],
+#         'DELETE': ['%(app_label)s.delete_%(model_name)s'],
+#     }
 
-    logger.info('in PostModelPermissions')
+#     logger.info('in PostModelPermissions')
 
+#     def has_permission(self, request, view):
+#         if request.method == 'GET':
+#             return request.user.is_authenticated
+#         elif request.method == 'POST':
+#             return True
+
+#     def has_object_permission(self, request, view, obj):
+#         logger.info('in PostModelPermissions has_object_permission')
+#         print('permissions.SAFE_METHODS: ', permissions.SAFE_METHODS)
+#         breakpoint()
+#         return True
+#         if request.method in permissions.SAFE_METHODS:
+#             # return request.user == obj.owner or True # need to modify so can see own stuff
+#             # breakpoint()
+#             return request.user.id == obj.post_user.id or True # need to modify so can see own stuff
+#         elif request.method == 'PATCH':
+#             # return request.user == obj.owner
+#             # breakpoint()
+#             return request.user.id == obj.post_user.id or request.user.is_staff
+#         elif request.method == 'DELETE':
+#             # return request.user == obj.owner
+#             return request.user.id == obj.post_user.id or request.user.is_staff
+#         elif request.method == 'PUT':
+#             return request.user.id == obj.post_user.id or request.user.is_staff
+#         return False
+    
+#     def has_change_permission(self, request, view, obj):
+#         breakpoint()
+#         return True
+    
+#     def has_delete_permission(self, request, view, obj):
+#         breakpoint()
+#         return True
+
+class PostModelPermissions(BasePermission):
     def has_permission(self, request, view):
         if request.method == 'GET':
             return request.user.is_authenticated
         elif request.method == 'POST':
             return True
-
+    
     def has_object_permission(self, request, view, obj):
-        logger.info('in PostModelPermissions has_object_permission')
-        print('permissions.SAFE_METHODS: ', permissions.SAFE_METHODS)
-        breakpoint()
-        if request.method in permissions.SAFE_METHODS:
-            # return request.user == obj.owner or True # need to modify so can see own stuff
-            # breakpoint()
-            return request.user.id == obj.post_user.id or True # need to modify so can see own stuff
-        elif request.method == 'PATCH':
-            # return request.user == obj.owner
-            # breakpoint()
-            return request.user.id == obj.post_user.id or request.user.is_staff
-        elif request.method == 'DELETE':
-            # return request.user == obj.owner
-            return request.user.id == obj.post_user.id or request.user.is_staff
-        elif request.method == 'PUT':
-            return request.user.id == obj.post_user.id or request.user.is_staff
-        return False
-
+        # if request.method in permissions.SAFE_METHODS:
+        #     # return request.user == obj.owner or True  # need to modify so can see own stuff
+        #     breakpoint()
+        #     return request.user.id == obj.post_user.id or True  # need to modify so can see own stuff
+        # elif request.method == 'PATCH':
+        #     # return request.user == obj.owner
+        #     breakpoint()
+        #     return request.user.id == obj.post_user.id or request.user.is_staff
+        # elif request.method == 'DELETE':
+        #     # return request.user == obj.owner
+        #     return request.user.id == obj.post_user.id or request.user.is_staff
+        # elif request.method == 'PUT':
+        #     return request.user.id == obj.post_user.id or request.user.is_staff
+        # return False
+        return request.user.id == obj.post_user.id or request.user.is_staff
+    
+    
 class PostModelViewSet(viewsets.ModelViewSet):
     # http_method_names = ['get', 'post', 'patch', 'put', 'delete']
     # queryset = PostModel.objects.all()
     serializer_class = PostSerializer
     # authentication_classes = [JWTAuthentication]
     authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated | IsAdminUser]
+    permission_classes = [PostModelPermissions]
     filter_backends = [SearchFilter]
     search_fields = ['post_title']
     pagination_class = MyPageNumberPagination

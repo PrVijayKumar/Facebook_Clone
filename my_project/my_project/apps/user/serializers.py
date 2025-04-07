@@ -7,12 +7,13 @@ class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True, source='postname')
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts']
+        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts', 'password']
         write_only_fields = ['is_staff', 'first_name', 'last_name']
         extra_kwargs = {
             'is_staff': {'write_only': True},
             'first_name': {'write_only': True},
-            'last_name': {'write_only': True}
+            'last_name': {'write_only': True},
+            'password': {'write_only': True},
         }
 
 # accounts/serializers.py
