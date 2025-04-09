@@ -3,6 +3,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from post.serializers import PostSerializer
 import re
+
 class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True, source='postname')
     class Meta:

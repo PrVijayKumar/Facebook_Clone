@@ -46,3 +46,4 @@ class PostComments(models.Model):
     com_reply = models.ForeignKey(User, on_delete=models.CASCADE, default=None, related_name="repliers", null=True)
     com_likes = models.PositiveIntegerField(default=0)
     reply_on_comment = models.PositiveIntegerField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)

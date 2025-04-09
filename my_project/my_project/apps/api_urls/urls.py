@@ -1,14 +1,18 @@
 from rest_framework.authtoken.views import obtain_auth_token
 from django.urls import path, include
-from user.api_views import views
+from api_views import views
 from rest_framework.routers import DefaultRouter
 from user.auth import CustomAuthToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from post.models import PostModel
+# from testing.views import TestingAPI
 
 
 router = DefaultRouter()
 
 router.register('userapi', views.UserModelViewSet, basename='user')
+router.register('postapi', views.PostModelViewSet, basename='post')
+router.register('testapi', views.TestingAPI, basename='test')
 # router.register('userapi', views.UserViewSet, basename='user')
 # router.register('userapi', views.UserReadOnlyModelViewSet, basename='user')
 # app_name = 'user_api'
@@ -28,6 +32,7 @@ urlpatterns = [
     # path('gettoken/', obtain_auth_token),
     # path('gettoken/', CustomAuthToken.as_view()),
     path('', include(router.urls)),
+    # path('testapi/', views.TestingAPI.as_view(), name='test'),
     path('register/', views.RegisterAPI.as_view(), name='create_apiuser'),
     path('login/', views.LoginAPI.as_view(), name='login_apiuser'),
     path('logout/', views.LogoutAPI.as_view(), name='logout_apiuser'),
@@ -35,5 +40,12 @@ urlpatterns = [
     path('gettoken/', TokenObtainPairView.as_view(), name="token_obtain"),
     path('refreshtoken/', TokenRefreshView.as_view(), name="token_refresh"),
     path('verifytoken/', TokenVerifyView.as_view(), name='refresh_token'),
+    # path('postapi/', include(router.urls)),
+
+
 ]
 # print(path('gettoken/', obtain_auth_token))
+
+
+# from post.api_views.views import PostList
+# from post.api_views.views import PostList

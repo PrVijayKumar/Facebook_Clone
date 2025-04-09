@@ -22,32 +22,33 @@ from rest_framework import serializers, viewsets, routers
 from user.models import User
 
 # Serializer define the API representation
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ['url', 'username', 'email', 'is_staff']
+# class UserSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ['url', 'username', 'email', 'is_staff']
 
-# Viewset define the behaviour of Views
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# # Viewset define the behaviour of Views
+# class UserViewSet(viewsets.ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
 
 # Router are used for automatic routing
 
 
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
+# router = routers.DefaultRouter()
+# router.register(r'users', UserViewSet)
 
 
 
 urlpatterns = [
-    path('', include(router.urls)),
+    # path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('user/', include('user.urls')),
     path('post/', include('post.urls')),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('postapi/', include('post.api_urls.urls')),
-    path('userapi/', include('user.api_urls.urls')),
+    # path('postapi/', include('post.api_urls.urls')),
+    # path('userapi/', include('user.api_urls.urls')),
+    path('api/', include('api_urls.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

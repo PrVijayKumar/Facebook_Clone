@@ -18,7 +18,7 @@ class MyBrowsableAPIRenderer(BrowsableAPIRenderer):
             # context.pop('post_form').fields.pop('password')
             pass
         
-        if not user.is_staff and 'UserSerializer' in str(context['view'].serializer_class):
+        if not user.is_staff: # and 'UserSerializer' in str(context['view'].serializer_class):
             # for field in context['raw_data_post_form'].fields:
             context.pop('raw_data_post_form')
             context.pop('post_form')
