@@ -9,6 +9,25 @@ function getId(id){
     // console.log(id)
 }
 
+function delPost(result){
+        $("#ModalDeletePost").modal('hide');
+        // result = JSON.parse(result);
+        // console.log(result)
+        // console.log("Id="+result.id)
+        result = JSON.parse(result);
+        console.log(result.id);
+        id=".f"+result.id;
+        // $(id).attr('display', 'none');
+        $(id).hide();
+        console.log("MY DELETE MESSAGE")
+        console.log(result.msg)
+        $('div#mymsgs').html('<p>'+result.msg+'</p>')
+        setTimeout(function(){
+            $('div#mymsgs').html('')
+        }, 2000)
+        // console.log($('#mymsgs').val(result.msg))
+}
+
 function cChange(obj){
     console.log("cchange Button")
     console.log(obj)
@@ -317,18 +336,7 @@ $(document).ready(function() {
     }
 
 
-    function delPost(result){
-        $("#ModalDeletePost").modal('hide');
-        // result = JSON.parse(result);
-        // console.log(result)
-        // console.log("Id="+result.id)
-        result = JSON.parse(result);
-        console.log(result.id);
-        id=".f"+result.id;
-        // $(id).attr('display', 'none');
-        $(id).hide();
-        
-    }
+    
 
 
     commbtns = document.querySelectorAll('.bcom');
@@ -338,6 +346,9 @@ $(document).ready(function() {
         x = btn.parentNode.parentNode;
         console.log(x);
         compop.querySelector(".modal-title").innerHTML=x.querySelector('#fbuser').innerHTML+"'s post";
+        console.log("image source")
+        // console.log(e.target.closest('#fposts').querySelector('img').getAttribute('src'))
+        $("img.com_img").attr('src', x.querySelector('img').getAttribute('src'))
         compop.querySelector("#p_user").innerHTML=x.querySelector('#fbuser').innerHTML;
         compop.querySelector("#p_desc").innerHTML=x.querySelector('.mydesc').innerHTML;
         // compop.querySelector("#p_img").src=x.querySelector('img').src;
@@ -365,6 +376,7 @@ $(document).ready(function() {
         // console.log("Hello from"+document.getElementById("c_user").textContent);
         user = JSON.parse(document.getElementById("c_user").textContent);
         console.log(result[0].fields.comment_desc);
+        console.log("Nice Javascript")
         console.log(result);
         // tempCom = '<div id="tempCom"><strong>'+user+"</strong><p>"+result[0].fields.comment_desc+'<br><a href="#">Like</a> <a href="#" class="repBtn">Reply</a></p></div>'
         // document.querySelector("#ucom").innerHTML=tempCom+document.querySelector("#ucom").innerHTML;
@@ -445,7 +457,8 @@ $(document).ready(function() {
                 console.log("Primary key check")
                 console.log(c.pk)
                 console.log(a)
-                link = "<a href='http://127.0.0.1:8000/post/freplies/"+c.pk+"' id='faReplies'>Show All Replies</a>";
+                // link = "<a href='http://127.0.0.1:8000/post/freplies/"+c.pk+"' id='faReplies'>Show All Replies</a>";
+                link = "<a href='https://localhost:8000/post/freplies/"+c.pk+"' id='faReplies'>Show All Replies</a>";
             }else{
                 link = "No Replies to this comment";
             }
@@ -586,6 +599,7 @@ $(document).ready(function() {
         console.log("Obj value");
         console.log(obj);
         user = JSON.parse(document.getElementById("c_user").textContent);
+        console.log("today's result")
         console.log(result);
         result = JSON.parse(result);
         console.log(result[0].fields.comment_desc);
@@ -723,7 +737,8 @@ $(document).ready(function() {
             rlist.forEach(function(a){
                 console.log(a)
                 if(a == r.pk){
-                    link = "<a href='http://127.0.0.1:8000/post/freplies/"+r.pk+"' id='faReplies'>Show All Replies</a>"
+                    // link = "<a href='http://127.0.0.1:8000/post/freplies/"+r.pk+"' id='faReplies'>Show All Replies</a>"
+                    link = "<a href='https://localhost:8000/post/freplies/"+r.pk+"' id='faReplies'>Show All Replies</a>"
                 }else{
                     link = "No Replies"
                 }
@@ -775,7 +790,8 @@ $(document).ready(function() {
         // console.log("Button clicked");
         console.log(this.parentNode.parentNode);
         id = this.parentNode.parentNode.querySelector('#pc_id').innerHTML
-        block = "<a class='editcomment' href='http://127.0.0.1:8000/post/cedit/"+id+"'>Edit</a><br><a href='#DeleteCommentModal' class='delcomment' data-toggle='modal' target-data='#DeleteCommentModal'>Delete</a>"
+        // block = "<a class='editcomment' href='http://127.0.0.1:8000/post/cedit/"+id+"'>Edit</a><br><a href='#DeleteCommentModal' class='delcomment' data-toggle='modal' target-data='#DeleteCommentModal'>Delete</a>"
+        block = "<a class='editcomment' href='https://localhost:8000/post/cedit/"+id+"'>Edit</a><br><a href='#DeleteCommentModal' class='delcomment' data-toggle='modal' target-data='#DeleteCommentModal'>Delete</a>"
         this.parentNode.parentNode.querySelector("div.edccmt").innerHTML = block;
     });
 
@@ -876,7 +892,8 @@ $(document).ready(function() {
         id = e.target.parentNode.parentNode.querySelector("#pc_id").innerHTML;
         console.log("Button clicked.")
         console.log(e.target.parentNode.parentNode.querySelector("#pc_id").innerHTML)
-        $('a#delcbtn').attr('href', 'http://127.0.0.1:8000/post/cdelete/'+id)
+        // $('a#delcbtn').attr('href', 'http://127.0.0.1:8000/post/cdelete/'+id)
+        $('a#delcbtn').attr('href', 'https://localhost:8000/post/cdelete/'+id)
 
     })
 
@@ -913,4 +930,79 @@ $(document).ready(function() {
         console.log($(id)[0]);
         $(id)[0].innerHTML="";
     }
+
+
+    $(document).on("click", "button.bstars", function(e){
+        console.log("stars clicked")
+        console.log(e.target.parentNode.parentNode)
+        received_by = e.target.parentNode.parentNode.querySelector("span#fbuser").innerHTML
+        post = e.target.parentNode.parentNode.classList[0].replace('f', '')
+        // console.log(post[0].replace('f', ''))
+        $("input#stars_received_by").attr('value', received_by)
+        $("input#stars_sent_on_post").attr('value', post)
+    })
+
+    $("form#sendStars").submit(function(e){
+        e.preventDefault();
+        console.log("Send Stars")
+
+        // obj = e.target;
+        url = e.target.action;
+        console.log(url);
+        csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        var formData = new FormData($("form#sendStars")[0]);
+        formData.append('csrfmiddlewaretoken', csrf)
+        $.ajax({
+            'type': 'POST',
+            'url': url,
+            'data': formData,
+            'cache': false,
+            'processData': false,
+            'contentType': false,
+            success: function(response){
+                // console.log("response"+response);
+                // delComment(response['result']);
+                updateStars(response['result'])
+            },
+            error: function(response){
+                console.log("Error");
+            }
+        })
+    })
+
+
+    function updateStars(result){
+        console.log("stars working")
+        result = JSON.parse(result)
+        console.log(result['post_id'])
+        post_class = 'f'+result['post_id']
+        console.log(post_class)
+        console.log($('div.'+post_class)[0].querySelector("#nstars").innerHTML)
+        $('div.'+post_class)[0].querySelector("#nstars").innerHTML = result['amount']
+        // console.log($("input#amountp")[0].attr('value'))
+        // quantity of stars
+        console.log('stars'+$("#amountp").val())
+        qos = document.getElementById("quantity_stars")
+        qos.innerHTML = parseInt(qos.innerHTML)-parseInt($("#amountp").val())
+        $("#amountp").attr('value', '');
+        $("#amountp").val('');
+        $("#PaymentModal").modal('hide');
+    }
+
+
+
+    $("input#amountp").on('input', function(e){
+        console.log("stars changing")
+        console.log(e.target.value)
+        stars_input_value = parseInt(e.target.value)
+        qos = parseInt(document.getElementById("quantity_stars").innerHTML)
+        if(stars_input_value > qos){
+            console.log("Not Sufficient Stars")
+            e.target.value = qos
+        }
+        
+        // $("input#hidden_stars").val(e.target.value)
+
+    })
+
 });

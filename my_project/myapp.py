@@ -88,18 +88,18 @@ def delete_data():
 
 delete_data()
 
-def get_data(id=None):
-    data = {}
-    if id is not None:
-        data = {'id': id}
+# def get_data(id=None):
+#     data = {}
+#     if id is not None:
+#         data = {'id': id}
     
-    json_data = json.dumps(data)
+#     json_data = json.dumps(data)
 
-    r = requests.get(url=URL, data=json_data)
+#     r = requests.get(url=URL, data=json_data)
 
-    data = r.json()
+#     data = r.json()
 
-    print(data)
+#     print(data)
 
 
 # get_data(58)

@@ -14,6 +14,11 @@ from pathlib import Path
 import os, sys
 import psycopg2
 from datetime import timedelta
+import sentry_sdk
+
+# prevet secret key from pushing on git hub
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,13 +27,17 @@ sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
+load_dotenv(BASE_DIR / '.env')
+
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-*qii@mrb@5e-p#x$g644yf5apxa$13#a1(^0jdyv+39wok9gwu'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
+
 
 
 # Application definition
@@ -52,25 +61,46 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'testing',
     'myapp',
+    'django_crontab',
+    # 'django_cron',
+    'social_django',
+    'django_extensions',
+    # 'django_redis',
+    # 'django_client',
+    'a_stripe',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
+
 ROOT_URLCONF = 'my_project.urls'
+
+AUTH_USER_MODEL = "user.CustomUser"
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, 'apps', 'user', 'templates', 'user'),
+            # /home/thoughtwin/vijay/facebook/my_project/my_project/templates/user
+            os.path.join(BASE_DIR, 'templates', 'user'),
+            os.path.join(BASE_DIR, 'templates', 'post'),
+            os.path.join(BASE_DIR, 'templates', 'a_stripe'),
+            os.path.join(BASE_DIR, 'templates'),
+            # os.path.join("/home/thoughtwin/vijay/facebook/my_project/my_project/templates/user"),
+            # os.path.join(BASE_DIR, 'apps', 'user', 'templates', 'user'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -79,6 +109,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -93,7 +125,7 @@ WSGI_APPLICATION = 'my_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'facebook_db',
+        'NAME': 'fbclone_db',
         'USER': 'postgres',
         'PASSWORD': '123',
         'HOST': 'localhost',
@@ -119,6 +151,40 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+
+AUTHENTICATION_BACKENDS = [
+    'user.customauth.CustomAuthentication',
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.github.GithubOAuth2',
+    # 'social_core.backends.open_id.OpenIdAuth',
+    # 'social_core.backends.twitter.TwitterOAuth',
+    # 'users.mymodule.backends.CustomBackend',
+    'django.contrib.auth.backends.ModelBackend',
+    # Needed to login by username in Django admin, regardless of `allauth`
+    # 'social_core.backends.google_onetap.GoogleOneTap',
+
+    # `allauth` specific authentication methods, such as login by email
+    # 'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+
+# pipelines for social auth
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    # 'myapp.pipeline.load_user',
+    # 'social_core.pipeline.social_auth.social_user',
+    'my_project.apps.python-social-auth-overrided.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+)
+
 
 
 # Internationalization
@@ -223,3 +289,260 @@ CELERY_TIMEZONE = "Asia/Kolkata"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
+
+CRONJOBS = [
+    ('30 10 * * *', 'user.cron.birthday_wishes', '>> /home/thoughtwin/vijay/advojo.log'),
+    # ('* * * * *', 'user.tasks.cron_success', '>> /home/thoughtwin/vijay/mycrontab.log'),
+]
+
+sentry_sdk.init(
+    dsn="https://247aba2a7357aa74065b7368b254f4af@o4509157193351168.ingest.us.sentry.io/4509161435693056",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
+
+
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
+SOCIAL_AUTH_JSONFIELD_CUSTOM = 'django.db.models.JSONField'
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email', 'phone_number']
+
+
+# Google Authentication
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+
+
+
+# New App
+SOCIAL_AUTH_FACEBOOK_KEY = os.getenv('SOCIAL_AUTH_FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = os.getenv('SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {'fields': 'id,name,email'}
+# SOCIAL_AUTH_FACEBOOK_SCOPE = os.getenv('SOCIAL_AUTH_FACEBOOK_SCOPE')
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = os.getenv('SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS')
+
+# Github Authentication credentials
+SOCIAL_AUTH_GITHUB_KEY = os.getenv('SOCIAL_AUTH_GITHUB_KEY')
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv('SOCIAL_AUTH_GITHUB_SECRET')
+SOCIAL_AUTH_GITHUB_SCOPE = ['email']
+
+# SOCIAL_AUTH_GITHUB_SCOPE = os.getenv('SOCIAL_AUTH_GITHUB_SCOPE')
+
+
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/allposts/'
+
+
+
+# SOCIAL_AUTH_USER_MODEL = 'users.models.CustomUser'
+LOGIN_URL = '/'
+# LOGOUT_URL = '/'
+LOGIN_REDIRECT_URL = '/allposts/'
+
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': '{levelname} {name} {lineno} "{asctime}" {pathname} {module} {funcName} {filename} {message}',
+            'style': '{',
+
+
+            # 'format': '%(levelname)s %(name)s %(lineno)s %(asctime)s %(pathname)s %(module)s %(funcName)s %(filename)s %(message)',
+            # 'style': '%',
+
+            # 'format': '$levelname $name $lineno $asctime $pathname $module $funcName $filename $message',
+            # 'style': '$',
+        },
+        'simple': {
+            'format': '{levelname} {lineno} "{asctime}" {filename} {message}',
+            'style': '{',
+        }
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'logs/debug.log',
+            'formatter': 'standard'
+        },
+        'user_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'apps/user/logs/info.log',
+            'formatter': 'simple'
+        },
+        'post_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'apps/post/logs/info.log',
+            'formatter': 'simple'
+        },
+        'users_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'apps/user/logs/signals.log',
+            'formatter': 'standard'
+        },
+        'posts_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'apps/post/logs/signals.log',
+            'formatter': 'simple'
+        },
+        'api_file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'apps/api_views/logs/info.log',
+            'formatter': 'standard'
+        },
+        'console': {
+            'level': 'WARNING',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'email_handler': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter': 'standard'
+        },
+        'rotating_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': BASE_DIR / 'logs/rdebug.log',
+            'maxBytes': 1024 * 1024 * 5,
+            'backupCount': 3,
+            'formatter': 'standard'
+        },
+        'timed_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': BASE_DIR / 'logs/tdebug.log',
+            'when': 'midnight', # Rotate daily at midnight
+            # 'when': 'S', # Each second create a new file
+            # 'backupCount': 7, # keep 7 days of logs
+            'backupCount': 3, # keep 3 files for backup
+            'formatter': 'standard',
+        }
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'user': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'user.views': {
+            'handlers': ['console', 'user_file', 'email_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'user.models': {
+            'handlers': ['user_file'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'post.views': {
+            'handlers': ['console', 'post_file', 'email_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'api_views.views': {
+            'handlers': ['console', 'api_file', 'email_handler'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
+        'user.receivers': {
+            'handlers': ['console', 'users_file', 'email_handler'],
+            'level': 'INFO',
+            'propagate': False
+        },
+        'post.receivers': {
+            'handlers': ['console', 'posts_file', 'email_handler'],
+            'level': 'INFO',
+            'propagate': False
+        }
+        # 'myapp': {
+        #     'handlers': ['rotating_file'],
+        #     'level': 'DEBUG',
+        #     'propagate': False
+        # }
+        # 'myapp': {
+        #     'handlers': ['timed_file'],
+        #     'level': 'DEBUG',
+        #     'propagate': False
+        # }
+    }
+}
+
+# ipware private ip
+IPWARE_PRIVATE_IP_PREFIX = ()
+
+
+
+USE_TZ = True
+
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 0
+# CACHE_MIDDLEWARE_KEY_PREFIX = 'fb_clone'
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://127.0.0.1:6379',
+#         # 'OPTIONS': {
+#         #     # 'CLIENT_CLASS': 'django_client.client.DefaultClient',
+#         # }
+#     }
+# }
+
+from decouple import config
+STRIPE_PUBLIC_KEY = config("STRIPE_PUBLIC_KEY")
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
+STRIPE_ENDPOINT_SECRET = config("STRIPE_ENDPOINT_SECRET")
+BACKEND_DOMAIN = config("BACKEND_DOMAIN")
+PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
+PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+#         'LOCATION': 'unique-snowflake',
+#     }
+# }
+
+
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': '/home/thoughtwin/vijay/facebook/my_project/my_project/cache',
+#     }
+# }
+
+
+# CACHES = {
+#     'default': {
+#         # 'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+#         # 'LOCATION': '127.0.0.1:11211',
+#         # 'TIMEOUT': 300,
+#         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+#         'LOCATION': 'enroll_cache',
+#         # 'TIMEOUT': 30,
+#         # 'OPTIONS': {
+#         #     'MAX_ENTRIES': 1000,
+#             # 'MAX_ENTRIES': 300,
+#             # 'CULL_FREQUENCY': 3,
+
+#         # }
+#     }
+# }

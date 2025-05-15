@@ -173,7 +173,7 @@
     /* border: 2px solid green; */
 }
 #popt button.blike{
-    margin-left: 30px;
+    margin-left: 20px;
     /* border: 2px solid red; */
     background-color: white;
     color: gray;
@@ -181,15 +181,26 @@
 }
 
 #popt button.bshare{
-    margin-left: 60px;
+    margin-left: 20px;
     /* border: 2px solid red; */
     background-color: white;
     color: gray;
     border: none;
 }
 
+
+
+#popt button.bstars{
+    margin-left: 20px;
+    /* border: 2px solid red; */
+    background-color: white;
+    color: gray;
+    border: none;
+}
+
+
 #popt button.bcom{
-    margin-left: 70px;
+    margin-left: 30px;
     /* border: 2px solid red; */
     background-color: white;
     color: gray;
@@ -231,3 +242,19 @@
     /* backdrop-filter: opacity(50%); */
 }
     
+
+.f_header{
+    height: 50px;
+}
+
+
+div#social_acc a.btn{
+    height: 50px;
+    width: 85%;
+    margin: auto;
+}
+
+div#social_acc img{
+    height: 10px;
+    width: 10px;
+}

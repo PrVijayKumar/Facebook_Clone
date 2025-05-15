@@ -14,4 +14,3 @@ class DemoTable(models.Model):
     email = models.EmailField()
     password1 = models.CharField(max_length=20)
     city = models.CharField(max_length=50, null=True)
-    contact = models.CharField(max_length=10, null=True)

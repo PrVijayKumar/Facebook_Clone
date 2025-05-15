@@ -1,0 +1,52 @@
+{% load static %}
+<!doctype html>
+<html>
+    <head>
+        {% if title %}
+        <title> {{ title }}</title>
+        {% else %}
+        <title> Facebook </title>
+        {% endif %}  
+        <!--
+      Link tags cause URI malformed error   -->
+        <link href="{% static 'css/all.min.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/brands.css' %}" rel="stylesheet" type="text/css">
+        <link href="{% static 'css/solid.css' %}" rel="stylesheet" type="text/css"> 
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.css' %}" >
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.less' %}" >
+        <link rel="stylesheet" href="{% static 'css/bootstrap-social.scss' %}" >
+
+        {% block css %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="mymsgs" style="font-size:40px; color: white; font-weight: bold; background:red;">
+        </div>
+
+        <div>
+            {% if messages %} {% for message in messages %}
+            {% if message.tags == 'error' %}
+            <div style="background:red; color: white; text-align: center;" id="nmsg"><h1>{{message}}</h1></div>
+            {% else %}
+            <div style="background:green; color: white;" id="nmsg"><h1>{{message}}</h1></div>
+            {% endif %}
+            {% endfor %} {% endif %}
+            {% block content %}
+            {% endblock %}
+            
+        </div>
+        
+
+        <script src="{% static 'js/all.min.js' %}"></script>
+        <script src="{% static 'js/fontawesome.js' %}"></script>
+        <script src="{% static 'js/solid.js' %}"></script>
+        <script src="{% static 'js/brands.js' %}"></script>
+        <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
+        {% comment %} <script src="{% static 'js/jquery.slim.min.js' %}"></script> {% endcomment %}
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        {% block javas %}
+        {% endblock %}
+    </body>
+</html>

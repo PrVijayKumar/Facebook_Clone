@@ -11,14 +11,16 @@ function ldlike(id, uid, btn){
         console.log(btn.parentElement.querySelector(".fa-heart").classList);
         btn.parentElement.querySelector(".fa-heart").classList.remove("fa-solid");
         btn.parentElement.querySelector(".fa-heart").classList.add("fa-regular");
-        flike("http://127.0.0.1:8000/post/lpost/", id, 0, uid)
+        // flike("http://127.0.0.1:8000/post/lpost/", id, 0, uid)
+        flike("https://localhost:8000/post/lpost/", id, 0, uid)
     }else{
         btn.parentElement.parentElement.querySelector('#lstatus').innerHTML = "Liked";
         btn.parentElement.parentElement.querySelector('#nlikes').innerHTML = nlikes+1;
         btn.classList.add("liked");
         btn.parentElement.querySelector(".fa-heart").classList.remove("fa-regular");
         btn.parentElement.querySelector(".fa-heart").classList.add("fa-solid");
-        flike("http://127.0.0.1:8000/post/lpost/", id, 1, uid)
+        // flike("http://127.0.0.1:8000/post/lpost/", id, 1, uid)
+        flike("https://localhost:8000/post/lpost/", id, 1, uid)
     }
 }
 function flike(url, id, flag, uid){

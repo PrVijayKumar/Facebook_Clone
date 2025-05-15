@@ -1,42 +1,81 @@
 from rest_framework import serializers
 # from .models import User
-from django.contrib.auth.models import User
+from .models import CustomUser
 from post.serializers import PostSerializer
 import re
 
 class UserSerializer(serializers.ModelSerializer):
     posts = PostSerializer(many=True, read_only=True, source='postname')
     class Meta:
-        model = User
-        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts', 'password']
+        model = CustomUser
+        fields = ['id', 'username', 'email', 'is_staff', 'first_name', 'last_name', 'posts', 'password', 'contact']
         write_only_fields = ['is_staff', 'first_name', 'last_name']
         extra_kwargs = {
             'is_staff': {'write_only': True},
             'first_name': {'write_only': True},
             'last_name': {'write_only': True},
             'password': {'write_only': True},
+            'contact': {'write_only': True},
         }
 
 # accounts/serializers.py
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    re_password = serializers.CharField(max_length=20)
     class Meta:
-        model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+        model = CustomUser
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'password', 're_password', 'contact']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            're_password': {'write_only': True}
+        }
 
     def create(self, validated_data):
         # breakpoint()
-        if (validated_data['email'] != '') and (bool(re.search("^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", validated_data['email']))):
-            if ('first_name' in validated_data and 'last_name' in validated_data):
-                user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
-            else:
-                user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'])
+        
+        if ('first_name' in validated_data and 'last_name' in validated_data):
+            # user = User.objects.create_user(validated_data['username'], validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'])
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], last_name=validated_data['last_name'], username = validated_data['username'], contact = validated_data['contact'])
+        elif ('first_name' in validated_data and 'last_name' not in validated_data):
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], first_name=validated_data['first_name'], username = validated_data['username'], contact = validated_data['contact'])
         else:
-            raise serializers.ValidationError({"email": "Enter a valid email address"})
+            user = CustomUser.objects.create_user(validated_data['email'], validated_data['password'], username=validated_data['username'], contact = validated_data['contact'])
         return user
 
+
+    def validate_email(self, value):
+        if (value != '') and (bool(re.search("^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$", value))):
+            if CustomUser.objects.filter(email=value).exists():
+                raise serializers.ValidationError("Email already exists")
+        # else:
+        #     raise serializers.ValidationError("Enter a valid email address") # email is validated by django iteself.
+        return value
+
+
+    def validate_first_name(self, value):
+        if value == "":
+            return value
+        if value.isalpha():
+            return value
+        raise serializers.ValidationError("First Name should only contain alphabets. Spaces, Numbers or Special Symbols are not allowed.")
+
+    def validate_last_name(self, value):
+        if value == "":
+            return value
+        if value.isalpha():
+            return value
+        raise serializers.ValidationError("Last Name should only contain alphabets. Spaces, Numbers or Special Symbols are not allowed.")
+
+
+    def validate_password(self, value):
+        # print(value)
+        # print(self.initial_data['re_password'])
+        if not bool(re.search(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$", value)):
+            raise serializers.ValidationError("Password must contain Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character.")
+        if value != self.initial_data['re_password']:
+            raise serializers.ValidationError("Passwords does not match")
+        return value
 
 
 
@@ -113,4 +152,4 @@ class CreateUserSerializer(serializers.Serializer):
     is_staff = serializers.BooleanField()
 
     def create(self, valid_data):
-        return User.objects.create(**valid_data)
+        return CustomUser.objects.create(**valid_data)

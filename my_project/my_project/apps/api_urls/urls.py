@@ -5,6 +5,9 @@ from rest_framework.routers import DefaultRouter
 from user.auth import CustomAuthToken
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from post.models import PostModel
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 # from testing.views import TestingAPI
 
 
@@ -15,6 +18,19 @@ router.register('postapi', views.PostModelViewSet, basename='post')
 router.register('testapi', views.TestingAPI, basename='test')
 # router.register('userapi', views.UserViewSet, basename='user')
 # router.register('userapi', views.UserReadOnlyModelViewSet, basename='user')
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="FBClone API Docs",
+        default_version='v1',
+        description="Facebook User Register",
+        terms_of_service="https://www.google.com/policies/terms",
+        contact=openapi.Contact(email="vijaychoudhary@thoughtwin.com"),
+        license=openapi.License(name="BSD License"),
+    ),
+    public=True,
+    permission_classes=(permissions.AllowAny,),
+)
 # app_name = 'user_api'
 urlpatterns = [
     # path("user/", views.LCUserAPI.as_view(), name='lcu'),
@@ -40,7 +56,12 @@ urlpatterns = [
     path('gettoken/', TokenObtainPairView.as_view(), name="token_obtain"),
     path('refreshtoken/', TokenRefreshView.as_view(), name="token_refresh"),
     path('verifytoken/', TokenVerifyView.as_view(), name='refresh_token'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     # path('postapi/', include(router.urls)),
+    # url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    # url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    # url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    
 
 
 ]

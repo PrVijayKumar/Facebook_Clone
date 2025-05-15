@@ -26,8 +26,10 @@
 # from django.views import View
 # from django.utils.decorators import method_decorator
 # import pdb
+# from user.models import User
 from post.models import PostModel
-from user.models import User
+from user.models import CustomUser
+
 from post.serializers import PostSerializer
 from django.views.decorators.csrf import csrf_exempt
 import pdb
@@ -77,8 +79,31 @@ from django.contrib.auth import login
 import logging
 from testing.models import DemoTable
 from testing.serializers import TestingSerializer
+from django.utils import timezone
 # from .custompermission import MyPermission
 
+
+# swagger imports
+# from rest_framework.generics import GenericAPIView
+
+
+# class API(GenericAPIView):
+
+#     serializer_class = UserSerializer
+#     def get(self, request):
+#         objects = CustomUser.objects.all()
+#         serializer = UserSerializer(object, many=True)
+#         return Response(serializer.data)
+    
+#     def post(self, request):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.save()
+#         # logger for creation of new user
+#         logger.info(f"New user with username:{user.username} created successfully at {timezone.now()} with API")
+#         return Response({
+#             'user': UserSerializer(user, context=self.get_serializer_context()).data,
+#         }, status=status.HTTP_201_CREATED)
 
 class TestingAPI(viewsets.ModelViewSet):
     queryset = DemoTable.objects.all()
@@ -144,6 +169,9 @@ class PostModelPermissions(BasePermission):
         if request.method == 'GET':
             return request.user.is_authenticated
         elif request.method == 'POST':
+            # breakpoint()
+            # logger for new post creation
+            logger.info(f"{request.user.username} create a new post at {timezone.now()}")
             return request.user.is_authenticated
   
     def has_object_permission(self, request, view, obj):
@@ -152,9 +180,13 @@ class PostModelPermissions(BasePermission):
         elif request.method == 'PATCH':
             return request.user.id == obj.id or request.user.is_staff
         elif request.method == 'DELETE':
+            # logger for deleting post
+            logger.info(f"{request.user.username} deleted the post with title: {obj.post_title} at {timezone.now()}")
             # return request.user == obj.owner
             return request.user.id == obj.id or request.user.is_staff
         elif request.method == 'PUT':
+            # logger for updating posts
+            logger.info(f"{request.user.username} successfully updated the post at {timezone.now()}")
             return request.user.id == obj.id or request.user.is_staff
         return False
 
@@ -180,23 +212,26 @@ class PostModelViewSet(viewsets.ModelViewSet):
         return posts
 
 
-@csrf_exempt
-def create_post(request):
-    if request.method == 'POST':
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        # parse the json data to python native data type
-        pythondata = JSONParser().parse(stream)
+# @csrf_exempt
+# def create_post(request):
+#     if request.method == 'POST':
+#         breakpoint()
+#         json_data = request.body
+#         stream = io.BytesIO(json_data)
+#         # parse the json data to python native data type
+#         pythondata = JSONParser().parse(stream)
 
-        # Now convert native data type to complex data type using serializer class
-        serializer = CreatePostSerializer(data=pythondata)
-        # Now check if incoming data is valid
-        if serializer.is_valid():
-            serializer.save()
-            res = {'msg': 'Post Created'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data, content_type="application/json")
-        return JsonResponse(serializer.errors, safe=False)
+#         # Now convert native data type to complex data type using serializer class
+#         serializer = CreatePostSerializer(data=pythondata)
+#         # Now check if incoming data is valid
+#         if serializer.is_valid():
+#             serializer.save()
+#             # logger for post creation
+#             logger.info(f"{request.user.username} created a new post with title: {pythondata.post_title} at {timezone.now()}")
+#             res = {'msg': 'Post Created'}
+#             json_data = JSONRenderer().render(res)
+#             return HttpResponse(json_data, content_type="application/json")
+#         return JsonResponse(serializer.errors, safe=False)
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -230,8 +265,8 @@ class UserModelViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_staff or self.request.user.is_superuser:
-            return User.objects.all()
-        return User.objects.filter(id=self.request.user.id)
+            return CustomUser.objects.all()
+        return CustomUser.objects.filter(id=self.request.user.id)
 
 
 class RegisterAPI(GenericAPIView):
@@ -239,24 +274,33 @@ class RegisterAPI(GenericAPIView):
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        # breakpoint()
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        # logger for creation of new user
+        logger.info(f"New user with username:{user.username} created successfully at {timezone.now()} with API")
         return Response({
-            'user': UserSerializer(user, context=self.get_serializer_context()).data
-        })
+            'user': UserSerializer(user, context=self.get_serializer_context()).data,
+        }, status=status.HTTP_201_CREATED)
     
 class LoginAPI(GenericAPIView):
     serializer_class = AuthTokenSerializer
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        serializer = AuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return Response({
-            'user': UserSerializer(user, context=self.get_serializer_context()).data
-        })
+        # pdb.set_trace()
+        try:
+            serializer = AuthTokenSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data['user']
+            login(request, user)
+            return Response({
+                'user': UserSerializer(user, context=self.get_serializer_context()).data
+            }, status=status.HTTP_200_OK)
+        except:
+            return Response({
+                'result': 'Username or Password does not match'
+            }, status=status.HTTP_401_UNAUTHORIZED)
         # return super(LoginAPI, self).post(request)
 
 
