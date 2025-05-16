@@ -36,7 +36,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG", default=False)
 
 ALLOWED_HOSTS = ['*']
 
@@ -217,6 +217,7 @@ PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_URL = 'static/'
 # STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
+print("STATIC ROOT", STATIC_ROOT)
 # STATICFILES_DIRS = (
 #     os.path.join(PROJECT_DIR, 'static'),
 #     )
@@ -530,6 +531,10 @@ BACKEND_DOMAIN = config("BACKEND_DOMAIN")
 PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
 PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 
+
+CSRF_TRUSTED_ORIGINS = ["https://*.herokuapp.com"] # new
+# DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -563,3 +568,5 @@ PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 #         # }
 #     }
 # }
+
+
