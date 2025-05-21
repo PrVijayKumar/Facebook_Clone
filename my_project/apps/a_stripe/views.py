@@ -3,10 +3,11 @@ from django.views import View
 from django.views.generic import DetailView, ListView
 
 from .models import Price, Product
+from user.models import CustomUser, Stars
 import stripe
 from django.conf import settings
 from django.shortcuts import redirect
-from .models import Price
+from .models import Price, Product, PurchaseHistory
 from django.views.generic import TemplateView
 import json
 from django.http.response import HttpResponse, JsonResponse
@@ -42,6 +43,7 @@ class CreateStripeCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
         price = Price.objects.get(id=self.kwargs["pk"])
 
+        # breakpoint()
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=["card"],
             line_items=[
@@ -53,22 +55,24 @@ class CreateStripeCheckoutSessionView(View):
                             "name": price.product.name,
                             "description": price.product.desc,
                             "images": [
-                                f"{settings.BACKEND_DOMAIN}/{price.product.thumbnail}"
+                                f"{settings.BACKEND_DOMAIN}{price.product.thumbnail.url}"
                             ],
                         },
                     },
                     "quantity": price.product.quantity,
                 }
             ],
-            metadata={"product_id": price.product.id},
+            metadata={
+                "product_id": price.product.id,
+                "user_id": request.user.id,
+                "quantity": price.product.quantity,
+                "amount_paid": int(price.price) * price.product.quantity,
+            },
             mode="payment",
             success_url=settings.PAYMENT_SUCCESS_URL,
             cancel_url=settings.PAYMENT_CANCEL_URL,
         )
-        context = {
-            'user': request.user
-        }
-        return redirect(checkout_session.url, context)
+        return redirect(checkout_session.url)
     
 
 
@@ -77,11 +81,11 @@ class SuccessView(TemplateView):
 
     def get(self, request, *args, **kwargs):
         print("get", request.body)
-        breakpoint()
+        # breakpoint()
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        breakpoint()
+        # breakpoint()
         print("post", request.body)
         return super().post(request, *args, **kwargs)
     
@@ -106,25 +110,40 @@ def stripe_webhook(request):
         event = stripe.Webhook.construct_event(
             payload, sig_header, endpoint_secret
         )
-    except ValueError as e:
+    # except ValueError as e:
+    except ValueError:
         # Invalid payload
-        print(e)
+        # print(e)
         return HttpResponse(status=400)
     
-    except stripe.error.SignatureVerificationError as e:
+    # except stripe.error.SignatureVerificationError as e:
+    except stripe.error.SignatureVerificationError:
         # Invalid signature
-        print(e)
+        # print(e)
         return HttpResponse(status=400)
 
     # Handle the checkout.session.completed event
     if event['type'] == 'checkout.session.completed':
         print("Payment was successful.")
+        session = event['data']['object']
+        # breakpoint()
+        product_id = session['metadata']['product_id']
+        user_id = session['metadata']['user_id']
+        quantity = int(session['metadata']['quantity'])
+        amount_paid = session['metadata']['amount_paid']
+        get_product = Product.objects.get(id=product_id)
+        get_user = CustomUser.objects.get(id=user_id)
+        print("amount paid", amount_paid)
+        PurchaseHistory.objects.create(product=get_product, purchase_success=True, user=get_user, amount_paid=amount_paid)
+        stars = Stars.objects.get(user_id=user_id)
+        stars.amount += quantity
+        stars.save()
         # TODO:
         # breakpoint()
-        import json
-        obj = request.body.decode('utf-8')
-        obj = json.loads(obj)
-        print(obj['data']['object']['metadata']['product_id'])
+        # import json
+        # obj = request.body.decode('utf-8')
+        # obj = json.loads(obj)
+        # print(obj['data']['object']['metadata']['product_id'])
 
 
     return HttpResponse(status=200)

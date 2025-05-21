@@ -2,6 +2,7 @@
 {% load static %}
 {% block css %}
 <link rel="stylesheet" href="{% static 'post/css/styles.css' %}"/>
+<link rel="stylesheet" href="{% static 'user/css/styles.css' %}"/>
 {% endblock %}
 {% block content %}
 {% if user.is_authenticated %}
@@ -27,7 +28,28 @@
         <img src="{{ post.post_content.url }}" height="300"/>
         Posted By: <span id="fbuser">{{ post.post_user }}</span><br>
         {% comment %} Description: <span id="desc">{{ post.post_title }}</span><br> {% endcomment %}
-        Description: <span id="dpost">{{ post.post_description }}</span><span id="rbtn"><a href="{% url 'post:detpost' id=post.id %}">Read More</a></span>
+        Description: <span id="dpost">{{ post.post_description }}</span><span id="rbtn"><a href="{% url 'post:detpost' id=post.id %}">Read More</a></span><br>
+        <span><i class="fa-solid fa-heart"></i></span> <span id="nlikes">{{post.post_likes}}</span>
+        <span style="color:#FFBF00;"><i class="fas fa-star"></i></span> <span style="color:#FFBF00;" id="nstars">{{post.post_stars}}</span>
+        <hr>
+        <div id="popt">
+          {% if post.id in likes %}
+            <button class="blike liked" onclick="ldlike({{post.id}}, {{user.id}}, this)"><i class="fa-solid fa-heart"></i> Like</button>
+          {% else %}
+            <button class="blike" onclick="ldlike({{post.id}}, {{user.id}}, this)"><i class="fa-regular fa-heart"></i> Like</button>
+          {% endif %}
+          <button class="bstars" data-toggle="modal" data-target="#PaymentModal" onclick=""><i class="far fa-star"></i> Stars</button>
+          <button class="bcom" data-toggle="modal" data-target="#CommentModal"><i class="fa-regular fa-comment"></i> Comment</button>
+          <button class="bshare"><i class="fa-solid fa-share"></i> Share</button>
+        </div>
+        <div id="purl">
+          {% if post.id in likes %}
+            <p id="lstatus">Liked</p>
+          {% else %}
+            <p id="lstatus">Not Liked</p>
+          {% endif %}
+          {% csrf_token %}
+        </div>
     </div><br>
     {% endfor %}
 

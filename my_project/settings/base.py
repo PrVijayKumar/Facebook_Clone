@@ -36,7 +36,9 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG", default=False)
+# DEBUG = os.getenv("DEBUG", default=False)
+# print(DEBUG)
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'user',
     'post',
@@ -71,14 +74,15 @@ INSTALLED_APPS = [
     # 'django_client',
     'a_stripe',
     'drf_yasg',
-    'whitenoise.runserver_nostatic',
 
 ]
 
+WHITENOISE_MANIFEST_STRICT = True
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
@@ -214,8 +218,8 @@ USE_TZ = True
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'static/'
-# STATIC_URL = '/static/'
+# STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles"
 print("STATIC ROOT", STATIC_ROOT)
 # STATICFILES_DIRS = (

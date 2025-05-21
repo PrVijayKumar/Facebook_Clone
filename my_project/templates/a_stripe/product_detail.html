@@ -15,7 +15,7 @@
       <h5 class="card-title">{{product.name}}</h5>
       <p class="card-text">{{product.desc}}</p>
       <div class="card-text">
-        <h5 class="card-text">${{ price.price }}</h5>
+        <h5 class="card-text">${{ price.price }} for each</h5>
           <form
           action="{% url 'products:create-checkout-session' price.id %}"
           method="POST">

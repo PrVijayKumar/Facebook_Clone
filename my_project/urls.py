@@ -15,13 +15,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path ,include, re_path
 from django.conf.urls.static import static
 from django.conf import settings
 from rest_framework import serializers, viewsets, routers
 from user.models import CustomUser
 from testing import views
 from django.views.decorators.cache import cache_page
+from django.conf import settings
+from django.views.static import serve
 # from user.models import User
 
 # Serializer define the API representation
@@ -46,21 +48,41 @@ def trigger_error(request):
     division_by_zero = 1 / 0
 
 
-urlpatterns = [
-    # path('', include(router.urls)),
-    path('admin/', admin.site.urls),
-    path('', include('user.urls')),
-    path('post/', include('post.urls')),
-    path('products/', include('a_stripe.urls'), name="products"),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # path('postapi/', include('post.api_urls.urls')),
-    # path('userapi/', include('user.api_urls.urls')),
-    path('sentry-debug/', trigger_error),
-    path('api/', include('api_urls.urls')),
-    path('sauth/', include('social_django.urls', namespace='social')),
-    # path('testing/', cache_page(30)(views.testHome)),
-    # path('testing/home/', views.testHome),
-    # path('testing/contact/', views.contact),
-]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+if settings.DEBUG:
+    urlpatterns = [
+        # path('', include(router.urls)),
+        path('admin/', admin.site.urls),
+        path('', include('user.urls')),
+        path('post/', include('post.urls')),
+        path('products/', include('a_stripe.urls'), name="products"),
+        # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+        # path('postapi/', include('post.api_urls.urls')),
+        # path('userapi/', include('user.api_urls.urls')),
+        path('sentry-debug/', trigger_error),
+        path('api/', include('api_urls.urls')),
+        path('sauth/', include('social_django.urls', namespace='social')),
+        # path('testing/', cache_page(30)(views.testHome)),
+        # path('testing/home/', views.testHome),
+        # path('testing/contact/', views.contact),
+    ]
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
+else:
+    urlpatterns = [
+        # path('', include(router.urls)),
+        path('admin/', admin.site.urls),
+        path('', include('user.urls')),
+        path('post/', include('post.urls')),
+        path('products/', include('a_stripe.urls'), name="products"),
+        # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+        # path('postapi/', include('post.api_urls.urls')),
+        # path('userapi/', include('user.api_urls.urls')),
+        path('sentry-debug/', trigger_error),
+        path('api/', include('api_urls.urls')),
+        path('sauth/', include('social_django.urls', namespace='social')),
+        # path('testing/', cache_page(30)(views.testHome)),
+        # path('testing/home/', views.testHome),
+        # path('testing/contact/', views.contact),
+        re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+        re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    ]
