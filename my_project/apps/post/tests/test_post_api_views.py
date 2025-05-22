@@ -17,17 +17,17 @@ fake = Faker()
 # @pytest.mark.usefixtures("post_api_fix")
 class TestPostAPIViews(APITestCase):
 
-    # @pytest.fixture(autouse=True)
-    # def api_data_set_up(self, post_api_fix):
-    #     self.client = APIClient()
-    #     self.user_data = post_api_fix
-    #     self.client.post(reverse('create_apiuser'), self.user_data, format="json")
-    #     self.user = CustomUser.objects.get(username=self.user_data['username'])
-    #     self.post_data = {
-    #                 'post_title': fake.name(),
-    #                 # 'post_user_id': self.user.id,
-    #                 'post_description': fake.text()
-	#                 }
+    @pytest.fixture(autouse=True)
+    def api_data_set_up(self, post_api_fix):
+        self.client = APIClient()
+        self.user_data = post_api_fix
+        self.client.post(reverse('create_apiuser'), self.user_data, format="json")
+        self.user = CustomUser.objects.get(username=self.user_data['username'])
+        self.post_data = {
+                    'post_title': fake.name(),
+                    # 'post_user_id': self.user.id,
+                    'post_description': fake.text()
+	                }
     @classmethod 
     def setUpTestData(cls):
         cls.client = APIClient()

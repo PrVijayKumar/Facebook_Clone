@@ -109,6 +109,14 @@ def create_post(request):
 
 def my_posts(request):
     context = {}
+    stars = Stars.objects.filter(user_id=request.user.id)
+    nos = 0
+    if not stars:
+        new_star = Stars.objects.create(user=request.user)
+        new_star.save()
+    else:
+        new_star = Stars.objects.get(user_id=request.user)
+        nos = new_star.amount
     c_user = request.user
     print(c_user)
     posts = PostModel.objects.filter(post_user=c_user.id).order_by('-post_date')
@@ -130,7 +138,8 @@ def my_posts(request):
         'posts': PostsFinal,
         'lastpage': totalpages,
         'likes': ulikes,
-        'totalPageList': [n+1 for n in range(totalpages)]
+        'totalPageList': [n+1 for n in range(totalpages)],
+        'nos': nos,
     }
     return render(request, 'post/myposts.html', context)
 
@@ -150,8 +159,21 @@ def my_posts(request):
 
 def friend_posts(request):
     context = {}
+    stars = Stars.objects.filter(user_id=request.user.id)
+    nos = 0
+    if not stars:
+        new_star = Stars.objects.create(user=request.user)
+        new_star.save()
+    else:
+        new_star = Stars.objects.get(user_id=request.user)
+        nos = new_star.amount
+    ulikes = []
     c_user = request.user
     posts = PostModel.objects.all().exclude(post_user=c_user.id).order_by('-post_date')
+    likes = PostLikes.objects.filter(liked_by=request.user.id)
+    if likes:
+        for like in likes:
+            ulikes.append(like.post_id_id)
     paginator = Paginator(posts, 5)
     page_number = request.GET.get('page')
     PostsFinal = paginator.get_page(page_number)
@@ -161,7 +183,9 @@ def friend_posts(request):
         # 'posts': posts,
         'posts': PostsFinal,
         'lastpage': totalpages,
-        'totalPageList': [n+1 for n in range(totalpages)]
+        'totalPageList': [n+1 for n in range(totalpages)],
+        'nos': nos,
+        'likes': ulikes,
     }
     return render(request, 'post/friends_post.html', context)
 
@@ -465,6 +489,7 @@ def fetch_replies(request, id):
 
 
 def edit_comment(request, id):
+    # breakpoint()
     if request.user.is_authenticated:
         result = None
         com = PostComments.objects.get(id=id)
