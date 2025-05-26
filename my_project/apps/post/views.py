@@ -108,39 +108,55 @@ def create_post(request):
 
 
 def my_posts(request):
+    # Initialize an empty context dictionary to pass data to the template
     context = {}
+
+    # Fetch the user's stars from the database
     stars = Stars.objects.filter(user_id=request.user.id)
-    nos = 0
+    nos = 0  # Initialize the number of stars to 0
+
+    # If the user has no stars, create a new Stars object for them
     if not stars:
         new_star = Stars.objects.create(user=request.user)
         new_star.save()
     else:
+        # Otherwise, fetch the existing Stars object and get the amount of stars
         new_star = Stars.objects.get(user_id=request.user)
         nos = new_star.amount
+
+    # Get the current logged-in user
     c_user = request.user
-    print(c_user)
+    print(c_user)  # Debugging: Print the current user
+
+    # Fetch posts created by the current user, ordered by the most recent post date
     posts = PostModel.objects.filter(post_user=c_user.id).order_by('-post_date')
+
+    # Paginate the posts, showing 5 posts per page
     paginator = Paginator(posts, 5)
-    page_number = request.GET.get('page')
-    PostsFinal = paginator.get_page(page_number)
-    totalpages = PostsFinal.paginator.num_pages #3
+    page_number = request.GET.get('page')  # Get the current page number from the request
+    PostsFinal = paginator.get_page(page_number)  # Get the posts for the current page
+    totalpages = PostsFinal.paginator.num_pages  # Get the total number of pages
+
+    # Fetch the posts liked by the current user
     likes = PostLikes.objects.filter(liked_by_id=request.user.id)
-    ulikes = []
+    ulikes = []  # Initialize an empty list to store liked post IDs
+
+    # Add the IDs of liked posts to the list
     for like in likes:
         ulikes.append(like.post_id_id)
 
-    print(ulikes)
+    print(ulikes)  # Debugging: Print the list of liked post IDs
 
-    # context['posts'] = posts
-    # context['likes'] = ulikes
+    # Prepare the context dictionary with data to render in the template
     context = {
-        # 'posts': posts,
-        'posts': PostsFinal,
-        'lastpage': totalpages,
-        'likes': ulikes,
-        'totalPageList': [n+1 for n in range(totalpages)],
-        'nos': nos,
+        'posts': PostsFinal,  # Paginated posts
+        'lastpage': totalpages,  # Total number of pages
+        'likes': ulikes,  # List of liked post IDs
+        'totalPageList': [n+1 for n in range(totalpages)],  # List of page numbers
+        'nos': nos,  # Number of stars the user has
     }
+
+    # Render the 'myposts.html' template with the context data
     return render(request, 'post/myposts.html', context)
 
 
