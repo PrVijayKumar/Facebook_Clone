@@ -36,6 +36,52 @@
             {% block content %}
             {% endblock %}
             
+            <!-- Large modal -->
+
+            <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title w-100 text-center" id="exampleModalLabel">Share</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span id="scirc" aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <b>{{ request.user.first_name }} {{ request.user.last_name }}</b><br>
+                        <button class="btn btn-sm btn-secondary">Feed</button>
+                        <button class="btn btn-sm btn-secondary"><i class="fas fa-users"></i>Friends</button><br><br>
+                        <textarea class="form-control" rows="2" placeholder="Say something about this..."></textarea>
+                        <br>
+                        <button class="btn btn-primary" style="float:right;">Share Now</button>
+                      </div>
+                      <div class="modal-footer">
+                        <div class="w-100">
+                            <strong>Send in Messenger</strong>
+                            <strong>Share to</strong><br><br>
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-facebook-messenger"></i><br>Messenger</button>
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-whatsapp"></i><br>WhatsApp</button>
+                            <button type="button" class="btn btn-secondary"><i class="fa-solid fa-link"></i><br>Copy link</button>
+                            <button type="button" class="btn btn-secondary"><i class="fas fa-users"></i><br>Group</button>
+                            {% comment %} <button type="button" class="btn btn-secondary"><img src="{% static 'user/images/x-twitter-brands.svg' %}"><br>Group</button> {% endcomment %}
+                            <button type="button" class="btn btn-secondary"><i class="fa-brands fa-x-twitter"></i><br>X</button>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+            <!-- Small modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm">Small modal</button>
+
+            <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                ...
+                </div>
+            </div>
+            </div>
         </div>
         
 

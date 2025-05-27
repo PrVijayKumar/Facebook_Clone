@@ -67,7 +67,8 @@
           {% endif %}
           <button class="bstars" data-toggle="modal" data-target="#PaymentModal" onclick=""><i class="far fa-star"></i> Stars</button>
           <button class="bcom" data-toggle="modal" data-target="#CommentModal"><i class="fa-regular fa-comment"></i> Comment</button>
-          <button class="bshare"><i class="fa-solid fa-share"></i> Share</button>
+          {% comment %} <button class="bshare"><i class="fa-solid fa-share"></i> Share</button> {% endcomment %}
+          <button type="button" class="bshare" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa-solid fa-share"></i> Share</button>
         </div>
         <div id="purl">
             {% if post.id in likes %}
