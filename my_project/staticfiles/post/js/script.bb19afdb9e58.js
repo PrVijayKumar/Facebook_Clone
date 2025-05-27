@@ -937,7 +937,7 @@ $(document).ready(function() {
         console.log(e.target.parentNode.parentNode)
         received_by = e.target.parentNode.parentNode.querySelector("span#fbuser").innerHTML
         console.log("Received by stars" + received_by)
-        $("span#starUserName").text(received_by);
+        $("span#starUserName").val(received_by);
         post = e.target.parentNode.parentNode.classList[0].replace('f', '')
         // console.log(post[0].replace('f', ''))
         $("input#stars_received_by").attr('value', received_by)
