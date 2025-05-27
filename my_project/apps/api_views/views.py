@@ -166,29 +166,37 @@ logger = logging.getLogger(__name__)
 
 class PostModelPermissions(BasePermission):
     def has_permission(self, request, view):
-        if request.method == 'GET':
-            return request.user.is_authenticated
-        elif request.method == 'POST':
-            # breakpoint()
-            # logger for new post creation
-            logger.info(f"{request.user.username} create a new post at {timezone.now()}")
-            return request.user.is_authenticated
+        return request.user.is_authenticated
+        # if request.method == 'GET':
+        #     return request.user.is_authenticated
+        # elif request.method == 'POST':
+        #     # breakpoint()
+        #     # logger for new post creation
+        #     logger.info(f"{request.user.username} create a new post at {timezone.now()}")
+        #     return request.user.is_authenticated
   
     def has_object_permission(self, request, view, obj):
+        # breakpoint()
+        # return True
         if request.method in permissions.SAFE_METHODS:
-            return request.user.id == obj.id or True  # need to modify so can see own stuff
+            return True  # need to modify so can see own stuff
+            # return request.user.id == obj.post_user.id or True  # need to modify so can see own stuff
+    #     # breakpoint()
+    #     return True
         elif request.method == 'PATCH':
-            return request.user.id == obj.id or request.user.is_staff
+            # breakpoint()
+            return request.user.id == obj.post_user.id or request.user.is_staff
         elif request.method == 'DELETE':
             # logger for deleting post
             logger.info(f"{request.user.username} deleted the post with title: {obj.post_title} at {timezone.now()}")
             # return request.user == obj.owner
-            return request.user.id == obj.id or request.user.is_staff
+            return request.user.id == obj.post_user.id or request.user.is_staff
         elif request.method == 'PUT':
             # logger for updating posts
             logger.info(f"{request.user.username} successfully updated the post at {timezone.now()}")
-            return request.user.id == obj.id or request.user.is_staff
-        return False
+            return request.user.id == obj.post_user.id or request.user.is_staff
+        return request.user.id == obj.post_user.id  # need to modify so can see own stuff
+    # pass
 
 
 class PostModelViewSet(viewsets.ModelViewSet):
