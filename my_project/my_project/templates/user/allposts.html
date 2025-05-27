@@ -67,7 +67,8 @@
           {% endif %}
           <button class="bstars" data-toggle="modal" data-target="#PaymentModal" onclick=""><i class="far fa-star"></i> Stars</button>
           <button class="bcom" data-toggle="modal" data-target="#CommentModal"><i class="fa-regular fa-comment"></i> Comment</button>
-          <button class="bshare"><i class="fa-solid fa-share"></i> Share</button>
+          {% comment %} <button class="bshare"><i class="fa-solid fa-share"></i> Share</button> {% endcomment %}
+          <button type="button" class="bshare" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa-solid fa-share"></i> Share</button>
         </div>
         <div id="purl">
             {% if post.id in likes %}
@@ -274,7 +275,7 @@
       <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
         <div class="modal-content com_modal">
           <div class="modal-header text-center">
-            <h5 class="modal-title w-100" id="comptitle">Send stars to support IAS academic</h5>
+            <h5 class="modal-title w-100" id="comptitle">Send stars to support <span id="starUserName"></span></h5>
             <a class="btn btn-warning btn-sm" href="{% url 'products:product-list' %}"><i class="far fa-star"></i> Buy Stars</a>
             <button type="button" class="close" id="cclose" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>

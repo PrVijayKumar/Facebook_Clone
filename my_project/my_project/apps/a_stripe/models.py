@@ -55,6 +55,14 @@ class Price(models.Model):
         return f"{self.product.name} {self.price}"
 
 
+class PurchaseHistory(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    purchase_success = models.BooleanField(default=False)
+    user = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING)
+    amount_paid = models.CharField(max_length=50, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 # class UserPayment(models.Model):
 #     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)

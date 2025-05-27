@@ -10,3 +10,7 @@ pip-delete-this-directory.txt
 /my_project/media/
 .env
 ../f_env/*
+cert.crt
+cert.key
+static/
+media/

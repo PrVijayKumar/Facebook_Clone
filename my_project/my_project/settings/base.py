@@ -18,8 +18,10 @@ import sentry_sdk
 
 # prevet secret key from pushing on git hub
 from dotenv import load_dotenv
+from environs import Env
 
-
+env = Env()
+env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -34,7 +36,9 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = os.getenv("DEBUG", default=False)
+# print(DEBUG)
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,6 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
     'user',
     'post',
@@ -69,14 +74,18 @@ INSTALLED_APPS = [
     # 'django_client',
     'a_stripe',
     'drf_yasg',
+
 ]
+
+WHITENOISE_MANIFEST_STRICT = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',
+    # 'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',
+    # 'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -209,15 +218,28 @@ USE_TZ = True
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_URL = 'static/'
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_DIR, 'static'),
-    )
+STATIC_ROOT = BASE_DIR / "staticfiles"
+print("STATIC ROOT", STATIC_ROOT)
+# STATICFILES_DIRS = (
+#     os.path.join(PROJECT_DIR, 'static'),
+#     )
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # STATICFILES_DIRS = (
 #     os.path.join(os.path.join(BASE_DIR, 'static')),
 #     )
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    }
+}
 
 MEDIA_URL = '/media/'
 
@@ -513,6 +535,10 @@ BACKEND_DOMAIN = config("BACKEND_DOMAIN")
 PAYMENT_SUCCESS_URL = config("PAYMENT_SUCCESS_URL")
 PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 
+
+CSRF_TRUSTED_ORIGINS = ["https://*.herokuapp.com"] # new
+# DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
+
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -546,3 +572,5 @@ PAYMENT_CANCEL_URL = config("PAYMENT_CANCEL_URL")
 #         # }
 #     }
 # }
+
+

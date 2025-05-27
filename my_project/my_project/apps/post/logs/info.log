@@ -1409,3 +1409,30 @@ INFO 100 "2025-05-14 17:28:54,014" views.py New post with title: Test Post creat
 INFO 100 "2025-05-14 17:33:40,402" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-14 12:03:40.402027+00:00
 INFO 100 "2025-05-14 17:40:30,235" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-14 12:10:30.235876+00:00
 INFO 100 "2025-05-14 17:40:52,894" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-14 12:10:52.894845+00:00
+INFO 399 "2025-05-22 11:19:07,809" views.py jay commented on post: ssdddd on 2025-05-22 05:49:07.809547+00:00
+INFO 399 "2025-05-22 11:34:40,272" views.py jay commented on post: ssdddd on 2025-05-22 06:04:40.272236+00:00
+INFO 100 "2025-05-22 17:56:53,655" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-22 12:26:53.655759+00:00
+INFO 100 "2025-05-22 17:56:58,771" views.py New post with title: Test Post created by user: Shahrukh on 2025-05-22 12:26:58.771292+00:00
+WARNING 244 "2025-05-22 17:57:37,857" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-22 12:27:37.857211+00:00
+WARNING 244 "2025-05-22 17:57:40,252" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-22 12:27:40.252582+00:00
+INFO 279 "2025-05-22 17:57:43,685" views.py Post with title: Test Post liked by user: Shahrukh on 2025-05-22 12:27:43.685859+00:00
+WARNING 286 "2025-05-22 17:57:43,698" views.py Post with title: Test Post disliked by user: Shahrukh on 2025-05-22 12:27:43.698043+00:00
+INFO 279 "2025-05-22 17:57:53,998" views.py Post with title: Test Post liked by user: Shahrukh on 2025-05-22 12:27:53.998508+00:00
+INFO 316 "2025-05-22 17:58:07,660" views.py Post with title: test updated successfully edited by user: Shahrukh on <function now at 0x7f3da09fc4a0>
+INFO 411 "2025-05-22 17:58:11,812" views.py Shahrukh attempted to make comment using GET method.
+INFO 399 "2025-05-22 17:58:19,386" views.py Shahrukh commented on post: Test Post on 2025-05-22 12:28:19.386771+00:00
+WARNING 405 "2025-05-22 17:58:22,184" views.py Invalid comment passed on post: Test Post by user: Shahrukh on 2025-05-22 12:28:22.184779+00:00
+INFO 384 "2025-05-22 17:58:27,918" views.py Shahrukh replied on comment of Shahrukh on post: Test Post on 2025-05-22 12:28:27.918324+00:00
+INFO 497 "2025-05-22 17:59:00,904" views.py Shahrukh made an attempt to edit comments through get request
+INFO 494 "2025-05-22 17:59:09,838" views.py Shahrukh edited the comment on 2025-05-22 12:29:09.838132+00:00
+INFO 497 "2025-05-22 17:59:12,575" views.py Shahrukh made an attempt to edit comments through get request
+INFO 494 "2025-05-22 17:59:15,362" views.py Shahrukh edited the comment on 2025-05-22 12:29:15.362722+00:00
+WARNING 516 "2025-05-22 17:59:26,688" views.py Shahrukh deleted comment: Test Comment
+WARNING 516 "2025-05-22 17:59:33,181" views.py Shahrukh deleted comment: Test Reply
+INFO 399 "2025-05-22 19:17:10,953" views.py jay commented on post: ssdddd on 2025-05-22 13:47:10.953823+00:00
+INFO 399 "2025-05-22 19:17:20,190" views.py jay commented on post: ssdddd on 2025-05-22 13:47:20.189971+00:00
+INFO 384 "2025-05-22 19:17:23,448" views.py jay replied on comment of jay on post: ssdddd on 2025-05-22 13:47:23.448314+00:00
+INFO 279 "2025-05-22 19:20:57,180" views.py Post with title: ssdddd liked by user: jay on 2025-05-22 13:50:57.180781+00:00
+WARNING 286 "2025-05-22 19:21:02,398" views.py Post with title: ssdddd disliked by user: jay on 2025-05-22 13:51:02.398828+00:00
+WARNING 286 "2025-05-22 19:23:57,698" views.py Post with title: aaaaaaaaaaaaaaaa disliked by user: jay on 2025-05-22 13:53:57.698849+00:00
+INFO 279 "2025-05-22 19:23:57,994" views.py Post with title: aaaaaaaaaaaaaaaa liked by user: jay on 2025-05-22 13:53:57.994880+00:00
