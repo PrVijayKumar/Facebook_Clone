@@ -3,6 +3,20 @@
 {% block script %} <script src="https://js.stripe.com/v3/"></script> {% endblock script%} 
 {% block content %}
 {% if user.is_authenticated %}
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link active" href="{% url 'user:apost' %}"><i class="fa-solid fa-house"></i> Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:fpost' %}"><i class="fas fa-users"></i> Friends Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:mpost' %}"><i class="fa-solid fa-user"></i> My Posts</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'post:cpost' %}"><i class="fa-solid fa-plus"></i> Create Post</a>
+  </li>
+</ul>
 <div class="card-deck" style="width: 18rem; !important">
   {% for price in prices %}
   <div class="card" >
