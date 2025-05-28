@@ -133,7 +133,7 @@ WSGI_APPLICATION = 'my_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': os.getenv('DATABASE_URL'),
         'NAME': 'fbclone_db',
         'USER': 'postgres',
         'PASSWORD': '123',
