@@ -88,7 +88,7 @@ class TestingSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         print(value)
-        if not bool(re.search("[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}", value)):
+        if not bool(re.search(r"[A-Za-z0-9\._%+\-]+@[A-Za-z0-9\.\-]+\.[A-Za-z]{2,}", value)):
             raise serializers.ValidationError("Provide a valid email address")
         return value
     
