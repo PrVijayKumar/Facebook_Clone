@@ -1436,3 +1436,36 @@ INFO 279 "2025-05-22 19:20:57,180" views.py Post with title: ssdddd liked by use
 WARNING 286 "2025-05-22 19:21:02,398" views.py Post with title: ssdddd disliked by user: jay on 2025-05-22 13:51:02.398828+00:00
 WARNING 286 "2025-05-22 19:23:57,698" views.py Post with title: aaaaaaaaaaaaaaaa disliked by user: jay on 2025-05-22 13:53:57.698849+00:00
 INFO 279 "2025-05-22 19:23:57,994" views.py Post with title: aaaaaaaaaaaaaaaa liked by user: jay on 2025-05-22 13:53:57.994880+00:00
+INFO 436 "2025-05-27 19:17:01,843" views.py Shahrukh attempted to make comment using GET method.
+INFO 424 "2025-05-27 19:17:13,941" views.py Shahrukh commented on post: Test Post on 2025-05-27 13:47:13.941432+00:00
+WARNING 430 "2025-05-27 19:17:18,898" views.py Invalid comment passed on post: Test Post by user: Shahrukh on 2025-05-27 13:47:18.898732+00:00
+INFO 409 "2025-05-27 19:17:27,902" views.py Shahrukh replied on comment of Shahrukh on post: Test Post on 2025-05-27 13:47:27.902051+00:00
+INFO 100 "2025-05-27 19:17:40,971" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-27 13:47:40.971548+00:00
+INFO 100 "2025-05-27 19:17:45,045" views.py New post with title: Test Post created by user: Shahrukh on 2025-05-27 13:47:45.045841+00:00
+WARNING 541 "2025-05-27 19:18:06,941" views.py Shahrukh deleted comment: Test Comment
+WARNING 541 "2025-05-27 19:18:15,113" views.py Shahrukh deleted comment: Test Reply
+WARNING 269 "2025-05-27 19:18:28,568" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-27 13:48:28.568276+00:00
+WARNING 269 "2025-05-27 19:18:32,691" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-27 13:48:32.691547+00:00
+INFO 522 "2025-05-27 19:18:46,250" views.py Shahrukh made an attempt to edit comments through get request
+INFO 519 "2025-05-27 19:18:59,314" views.py Shahrukh edited the comment on 2025-05-27 13:48:59.314183+00:00
+INFO 522 "2025-05-27 19:19:03,375" views.py Shahrukh made an attempt to edit comments through get request
+INFO 519 "2025-05-27 19:19:07,502" views.py Shahrukh edited the comment on 2025-05-27 13:49:07.502764+00:00
+INFO 341 "2025-05-27 19:19:29,263" views.py Post with title: test updated successfully edited by user: Shahrukh on <function now at 0x7fe839796200>
+INFO 304 "2025-05-27 19:20:44,982" views.py Post with title: Test Post liked by user: Shahrukh on 2025-05-27 13:50:44.982635+00:00
+WARNING 311 "2025-05-27 19:20:45,006" views.py Post with title: Test Post disliked by user: Shahrukh on 2025-05-27 13:50:45.006761+00:00
+INFO 304 "2025-05-27 19:21:03,013" views.py Post with title: Test Post liked by user: Shahrukh on 2025-05-27 13:51:03.013215+00:00
+INFO 436 "2025-05-27 19:29:32,738" views.py Shahrukh attempted to make comment using GET method.
+INFO 424 "2025-05-27 19:29:46,275" views.py Shahrukh commented on post: Test Post on 2025-05-27 13:59:46.275168+00:00
+WARNING 430 "2025-05-27 19:29:52,626" views.py Invalid comment passed on post: Test Post by user: Shahrukh on 2025-05-27 13:59:52.626626+00:00
+INFO 409 "2025-05-27 19:30:01,821" views.py Shahrukh replied on comment of Shahrukh on post: Test Post on 2025-05-27 14:00:01.821400+00:00
+INFO 100 "2025-05-27 19:30:15,434" views.py New post with title: Test Post 2 created by user: Shahrukh on 2025-05-27 14:00:15.434315+00:00
+INFO 100 "2025-05-27 19:30:20,350" views.py New post with title: Test Post created by user: Shahrukh on 2025-05-27 14:00:20.350070+00:00
+WARNING 541 "2025-05-27 19:30:41,517" views.py Shahrukh deleted comment: Test Comment
+WARNING 541 "2025-05-27 19:30:50,326" views.py Shahrukh deleted comment: Test Reply
+WARNING 269 "2025-05-27 19:31:02,544" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-27 14:01:02.544604+00:00
+WARNING 269 "2025-05-27 19:31:06,514" views.py Post with title: Test Post deleted by user: Shahrukh on 2025-05-27 14:01:06.514303+00:00
+INFO 522 "2025-05-27 19:31:21,483" views.py Shahrukh made an attempt to edit comments through get request
+INFO 519 "2025-05-27 19:31:34,291" views.py Shahrukh edited the comment on 2025-05-27 14:01:34.291103+00:00
+INFO 522 "2025-05-27 19:31:38,693" views.py Shahrukh made an attempt to edit comments through get request
+INFO 519 "2025-05-27 19:31:43,825" views.py Shahrukh edited the comment on 2025-05-27 14:01:43.825967+00:00
+INFO 341 "2025-05-27 19:32:06,158" views.py Post with title: test updated successfully edited by user: Shahrukh on <function now at 0x7f65f186e2a0>

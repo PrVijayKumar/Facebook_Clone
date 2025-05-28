@@ -299,7 +299,7 @@ SIMPLE_JWT = {
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'vijaychoudhary@thoughtwin.com'
-EMAIL_HOST_PASSWORD = 'ihwr odop slyc weah'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Celery Configuration Options
@@ -558,7 +558,7 @@ CSRF_TRUSTED_ORIGINS = ["https://*.herokuapp.com"] # new
 
 # CACHES = {
 #     'default': {
-#         # 'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+#         # 'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',992869
 #         # 'LOCATION': '127.0.0.1:11211',
 #         # 'TIMEOUT': 300,
 #         'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
