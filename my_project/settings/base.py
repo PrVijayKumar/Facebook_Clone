@@ -40,7 +40,6 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # DEBUG = os.getenv("DEBUG", default=False)
 # print(DEBUG)
 DEBUG = os.getenv("DEBUG").lower() == "true"
-DEBUG = True
 print("DEBUG Value", DEBUG)
 ALLOWED_HOSTS = ['*']
 
