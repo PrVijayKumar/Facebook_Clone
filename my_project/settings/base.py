@@ -39,8 +39,9 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = os.getenv("DEBUG", default=False)
 # print(DEBUG)
-DEBUG = False
-
+DEBUG = os.getenv("DEBUG").lower() == "true"
+DEBUG = True
+print("DEBUG Value", DEBUG)
 ALLOWED_HOSTS = ['*']
 
 
@@ -143,7 +144,7 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
+# DATABASES['default'] = dj_database_url.parse(os.getenv('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

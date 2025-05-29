@@ -295,8 +295,9 @@ def all_posts(request):
     stars = Stars.objects.filter(user_id=request.user.id)
     nos = 0
     if not stars:
-        new_star = Stars.objects.create(user=request.user)
-        new_star.save()
+        if isinstance(request.user, CustomUser):
+            new_star = Stars.objects.create(user=request.user)
+            new_star.save()
     else:
         new_star = Stars.objects.get(user_id=request.user)
         nos = new_star.amount
