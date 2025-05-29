@@ -17,3 +17,4 @@ cert.crt
 cert.key
 static/
 media/
+**.json
