@@ -1469,3 +1469,10 @@ INFO 519 "2025-05-27 19:31:34,291" views.py Shahrukh edited the comment on 2025-
 INFO 522 "2025-05-27 19:31:38,693" views.py Shahrukh made an attempt to edit comments through get request
 INFO 519 "2025-05-27 19:31:43,825" views.py Shahrukh edited the comment on 2025-05-27 14:01:43.825967+00:00
 INFO 341 "2025-05-27 19:32:06,158" views.py Post with title: test updated successfully edited by user: Shahrukh on <function now at 0x7f65f186e2a0>
+WARNING 541 "2025-05-29 10:57:58,009" views.py jay deleted comment: nice car
+WARNING 541 "2025-05-29 10:58:02,656" views.py jay deleted comment: 123
+WARNING 541 "2025-05-29 10:58:06,225" views.py jay deleted comment: wow
+WARNING 541 "2025-05-29 10:58:09,960" views.py jay deleted comment: nice car
+INFO 424 "2025-05-29 10:58:29,202" views.py jay commented on post: my new post on 2025-05-29 05:28:29.202099+00:00
+INFO 409 "2025-05-29 10:58:55,738" views.py admin replied on comment of jay on post: my new post on 2025-05-29 05:28:55.738300+00:00
+WARNING 541 "2025-05-29 10:59:01,891" views.py admin deleted comment: really
